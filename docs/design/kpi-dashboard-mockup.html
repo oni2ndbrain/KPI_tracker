@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>KPI_tracker 관리 화면 목업 (파스텔 · macOS 스타일)</title>
+<style>
+  :root {
+    --surface-0: #fcfcfb;
+    --surface-1: #f1efe8;
+    --surface-2: #ffffff;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #898781;
+    --border: rgba(11,11,11,0.10);
+    --border-strong: rgba(11,11,11,0.18);
+    --bg-accent: #e6f1fb;
+    --text-accent: #185fa5;
+    --bg-warning: #faeeda;
+    --text-warning: #854f0b;
+    --text-success: #3b6d11;
+    --text-danger: #a32d2d;
+    --radius: 8px;
+    font-family: -apple-system, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  }
+  body { background: var(--surface-0); color: var(--text-primary); margin: 0; padding: 2rem; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  button { font-family: inherit; border: none; background: transparent; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<!--
+  이 파일은 /grill-with-docs 그릴링 세션에서 케이트님과 합의한 KPI_tracker 관리 화면
+  디자인 방향(파스텔 색상 + macOS 앱 스타일)을 그대로 재현하기 위한 참고 목업입니다.
+  실제 개발 시 이 색상 팔레트와 레이아웃 구조를 기준으로 삼으면 됩니다.
+  팔레트: 민트 #9FE1CB/#5DCAA5/#0F6E56/#085041, 코랄 #F5C4B3/#F0997B/#993C1D/#712B13,
+          앰버 #FAC775/#854F0B/#633806, 퍼플 #CECBF6/#AFA9EC/#534AB7/#3C3489, 취약 레드 #F09595
+-->
+
+<div style="border: 0.5px solid var(--border); border-radius: 12px; overflow: hidden;">
+
+  <div style="background: var(--surface-1); height: 40px; display: flex; align-items: center; padding: 0 14px; position: relative; border-bottom: 0.5px solid var(--border);">
+    <div style="display: flex; gap: 8px;">
+      <span style="width: 12px; height: 12px; border-radius: 50%; background: #FF5F57;"></span>
+      <span style="width: 12px; height: 12px; border-radius: 50%; background: #FEBC2E;"></span>
+      <span style="width: 12px; height: 12px; border-radius: 50%; background: #28C840;"></span>
+    </div>
+    <span style="position: absolute; left: 50%; transform: translateX(-50%); font-size: 13px; font-weight: 500;">KPI_tracker</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 168px 1fr; min-height: 580px;">
+    <div style="background: var(--surface-1); padding: 14px 10px; display: flex; flex-direction: column; gap: 2px; border-right: 0.5px solid var(--border);">
+      <p style="font-size: 11px; font-weight: 500; color: var(--text-muted); padding: 0 8px; margin: 4px 0 6px; letter-spacing: 0.02em;">탐색</p>
+      <button class="navbtn" data-panel="d-dash" style="display:flex; align-items:center; gap:9px; text-align:left; padding:7px 8px; font-size:13px; border-radius:6px; background: var(--bg-accent); color: var(--text-accent);">대시보드</button>
+      <button class="navbtn" data-panel="d-table" style="display:flex; align-items:center; gap:9px; text-align:left; padding:7px 8px; font-size:13px; border-radius:6px; color: var(--text-primary);">KPI 현황</button>
+      <button class="navbtn" data-panel="d-company" style="display:flex; align-items:center; gap:9px; text-align:left; padding:7px 8px; font-size:13px; border-radius:6px; color: var(--text-primary);">목표 회사</button>
+      <button class="navbtn" data-panel="d-quiz" style="display:flex; align-items:center; gap:9px; text-align:left; padding:7px 8px; font-size:13px; border-radius:6px; color: var(--text-primary);">역량 진단</button>
+      <button class="navbtn" data-panel="d-def" style="display:flex; align-items:center; gap:9px; text-align:left; padding:7px 8px; font-size:13px; border-radius:6px; color: var(--text-primary);">지표 정의서</button>
+      <p style="font-size: 11px; color: var(--text-muted); padding: 12px 8px 0; margin: 10px 0 0; border-top: 0.5px solid var(--border); line-height: 1.6;">정기·달성 리포트와 D-day 알림은 이메일로 별도 발송돼요.</p>
+    </div>
+
+    <div style="background: var(--surface-2); padding: 1.25rem;">
+
+      <div id="d-dash" class="dpanel">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 14px;">
+          <div style="background: #9FE1CB; border-radius: 10px; padding: 12px;"><p style="font-size:11px; color:#0F6E56; margin:0 0 4px;">역량 채우기</p><p style="font-size:20px; font-weight:500; color:#085041; margin:0;">62%</p></div>
+          <div style="background: #F5C4B3; border-radius: 10px; padding: 12px;"><p style="font-size:11px; color:#993C1D; margin:0 0 4px;">지원 건수</p><p style="font-size:20px; font-weight:500; color:#712B13; margin:0;">3건</p></div>
+          <div style="background: #FAC775; border-radius: 10px; padding: 12px;"><p style="font-size:11px; color:#854F0B; margin:0 0 4px;">프로젝트 완성도</p><p style="font-size:20px; font-weight:500; color:#633806; margin:0;">80%</p></div>
+          <div style="background: #CECBF6; border-radius: 10px; padding: 12px;">
+            <p style="font-size:11px; color:#534AB7; margin:0 0 4px;">퀴즈 평균</p>
+            <div style="position: relative; width: 100%; height: 46px; margin-top: 2px;">
+              <canvas id="gaugeChart4"></canvas>
+              <div style="position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); text-align:center;"><span style="font-size:16px; font-weight:500; color:#3C3489;">3.4</span><span style="font-size:11px; color:#534AB7;">/5</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 12px;">
+          <div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; padding: 1rem;">
+            <p style="font-size: 12px; color: var(--text-secondary); margin: 0 0 10px;">역량 갭 (JD 요구 vs 보유)</p>
+            <div style="position: relative; width: 100%; height: 180px;"><canvas id="gapChart4"></canvas></div>
+          </div>
+          <div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; padding: 1rem;">
+            <p style="font-size: 12px; color: var(--text-secondary); margin: 0 0 10px;">활동 시간 비중</p>
+            <div style="position: relative; width: 100%; height: 140px;"><canvas id="donutChart4"></canvas></div>
+          </div>
+        </div>
+        <div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; padding: 1rem; margin-top: 12px;">
+          <p style="font-size: 12px; color: var(--text-secondary); margin: 0 0 10px;">역량 점수 추이 (8주)</p>
+          <div style="position: relative; width: 100%; height: 150px;"><canvas id="trendChart4"></canvas></div>
+        </div>
+      </div>
+
+      <div id="d-table" class="dpanel" style="display:none;">
+        <p style="font-size: 13px; font-weight: 500; margin: 0 0 12px;">KPI 항목별 현황</p>
+        <div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; overflow: hidden;">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="font-size:13px;">역량 채우기 · 식각공정</span><span style="font-size:13px; font-weight:500; color:var(--text-success);">100% · 달성</span></div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="font-size:13px;">역량 채우기 · 포토공정</span><span style="font-size:13px; font-weight:500; color:var(--text-danger);">62% · 목표 100%</span></div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="font-size:13px;">이번 달 지원 건수</span><span style="font-size:13px; font-weight:500; color:var(--text-danger);">3건 · 목표 5건</span></div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:11px 14px;"><span style="font-size:13px;">AI 프로젝트 완성도</span><span style="font-size:13px; font-weight:500; color:var(--text-warning);">80% · 목표 100%</span></div>
+        </div>
+      </div>
+
+      <div id="d-company" class="dpanel" style="display:none;">
+        <p style="font-size: 13px; font-weight: 500; margin: 0 0 12px;">목표 회사 마감일 현황</p>
+        <div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; padding: 14px; display:flex; flex-direction:column; gap:16px;">
+          <div><div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;"><span>삼성전자 · 공정기술</span><span style="color:var(--text-danger); font-weight:500;">D-18</span></div><div style="background:var(--surface-1); border-radius:6px; height:8px; overflow:hidden;"><div style="width:62%; height:100%; background:#5DCAA5;"></div></div></div>
+          <div><div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;"><span>SK하이닉스 · 양산기술</span><span style="color:var(--text-warning); font-weight:500;">D-42</span></div><div style="background:var(--surface-1); border-radius:6px; height:8px; overflow:hidden;"><div style="width:40%; height:100%; background:#5DCAA5;"></div></div></div>
+        </div>
+      </div>
+
+      <div id="d-quiz" class="dpanel" style="display:none;">
+        <div style="background: var(--bg-warning); border-radius: 8px; padding: 9px 12px; display:flex; align-items:center; gap:8px; margin-bottom:14px;"><span style="font-size:12px; color:var(--text-warning);">마지막 진단 9일 전 · 이번 주 진단해볼까요?</span></div>
+        <p style="font-size: 13px; font-weight: 500; margin: 0 0 10px;">항목별 점수 (5점 만점)</p>
+        <div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; padding: 1rem;">
+          <div style="position: relative; width: 100%; height: 170px;"><canvas id="quizChart4"></canvas></div>
+        </div>
+      </div>
+
+      <div id="d-def" class="dpanel" style="display:none;">
+        <p style="font-size: 13px; font-weight: 500; margin: 0 0 12px;">지표 정의서 · 역량 채우기</p>
+        <div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; overflow: hidden;">
+          <div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted);">지표 구분</span><span style="font-size:13px;">역량 채우기 KPI</span></div>
+          <div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">산식</span><span style="font-size:13px;">(충족한 JD 요구 역량 수 ÷ 전체 요구 역량 수) × 100, 진단 퀴즈 점수로 가중 보정</span></div>
+          <div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">데이터 원천</span><span style="font-size:13px;">채용공고 텍스트, LLM Wiki 노트/대화, 역량 진단 퀴즈</span></div>
+          <div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted);">집계 주기</span><span style="font-size:13px;">매주</span></div>
+          <div style="display:flex; padding:11px 14px;"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">관련 KPI</span><span style="font-size:13px;">선행: 활동 시간 비중 · 후행: 퀴즈 점수 향상</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+new Chart(document.getElementById('gaugeChart4'), { type:'doughnut', data:{datasets:[{data:[3.4,1.6],backgroundColor:['#3C3489','#EEEDFE'],borderWidth:0}]}, options:{rotation:-90,circumference:180,cutout:'70%',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}}} });
+new Chart(document.getElementById('gapChart4'), { type:'bar', data:{ labels:['포토','식각','증착','데이터','품질'], datasets:[{label:'요구',data:[90,85,70,80,75],backgroundColor:'#5DCAA5',borderRadius:3},{label:'보유',data:[95,80,60,55,70],backgroundColor:'#F0997B',borderRadius:3}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',align:'end',labels:{boxWidth:8,font:{size:10}}}},scales:{y:{max:105,grid:{color:'#e1e0d9'}},x:{grid:{display:false},ticks:{font:{size:10}}}}} });
+new Chart(document.getElementById('donutChart4'), { type:'doughnut', data:{ labels:['학습','AI프로젝트','자소서','기타'], datasets:[{data:[40,32,20,8],backgroundColor:['#5DCAA5','#F0997B','#AFA9EC','#B4B2A9'],borderWidth:2,borderColor:'#fcfcfb'}]}, options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false}}} });
+new Chart(document.getElementById('trendChart4'), { type:'line', data:{ labels:['1주','2주','3주','4주','5주','6주','7주','8주'], datasets:[{data:[48,51,55,58,62,65,68,71],borderColor:'#AFA9EC',backgroundColor:'rgba(175,169,236,0.2)',fill:true,borderWidth:2,pointRadius:2,tension:0.35},{data:[40,43,47,50,54,57,60,63],borderColor:'#5DCAA5',backgroundColor:'rgba(93,202,165,0.15)',fill:true,borderWidth:2,borderDash:[5,4],pointRadius:2,tension:0.35}]}, options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,grid:{color:'#e1e0d9'}},x:{grid:{display:false},ticks:{font:{size:10}}}}} });
+new Chart(document.getElementById('quizChart4'), { type:'bar', data:{ labels:['포토공정','식각공정','증착공정','데이터분석','품질관리'], datasets:[{data:[4,2,3,2,4],backgroundColor:['#5DCAA5','#F09595','#5DCAA5','#F09595','#5DCAA5'],borderRadius:3}]}, options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{max:5,grid:{color:'#e1e0d9'}},y:{grid:{display:false}}}} });
+
+document.querySelectorAll('.navbtn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.dpanel').forEach(function(p){ p.style.display = 'none'; });
+    document.getElementById(btn.dataset.panel).style.display = 'block';
+    document.querySelectorAll('.navbtn').forEach(function(b){ b.style.background = 'transparent'; b.style.color = 'var(--text-primary)'; });
+    btn.style.background = 'var(--bg-accent)'; btn.style.color = 'var(--text-accent)';
+  });
+});
+</script>
+</body>
+</html>
