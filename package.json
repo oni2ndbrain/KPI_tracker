@@ -7,7 +7,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "npm run typecheck && npm run test"
+    "check": "npm run typecheck && npm run test",
+    "verify:drive": "node --env-file=.env scripts/verify-google-drive-connection.mjs"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
