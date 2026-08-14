@@ -1,5 +1,6 @@
 import type { KpiState } from "../../kpi-engine/index.js";
 import type { DriveClient } from "./drive-client.js";
+import { readJsonArray, writeJsonArray } from "./json-blob-file.js";
 import { trackerFolderId } from "./tracker-folder.js";
 
 // Tracks every KPI id ever saved, so list() can enumerate them without a "list files in a
@@ -16,22 +17,11 @@ function fileNameFor(kpiId: string): string {
   return `${kpiId}.json`;
 }
 
-async function readIndex(drive: DriveClient, folderId: string): Promise<{ fileId: string | null; ids: string[] }> {
-  const fileId = await drive.findFile(INDEX_FILE_NAME, folderId);
-  const ids: string[] = fileId ? (JSON.parse(await drive.readFile(fileId)) as string[]) : [];
-  return { fileId, ids };
-}
-
 async function addToIndex(drive: DriveClient, folderId: string, kpiId: string): Promise<void> {
-  const { fileId, ids } = await readIndex(drive, folderId);
+  const { fileId, items: ids } = await readJsonArray<string>(drive, folderId, INDEX_FILE_NAME);
   if (ids.includes(kpiId)) return;
 
-  const content = JSON.stringify([...ids, kpiId]);
-  if (fileId) {
-    await drive.updateFile(fileId, content);
-  } else {
-    await drive.createFile(INDEX_FILE_NAME, folderId, content);
-  }
+  await writeJsonArray(drive, folderId, INDEX_FILE_NAME, fileId, [...ids, kpiId]);
 }
 
 export function createKpiStorage(drive: DriveClient): KpiStorage {
@@ -64,7 +54,7 @@ export function createKpiStorage(drive: DriveClient): KpiStorage {
 
     async list() {
       const folderId = await trackerFolderId(drive);
-      const { ids } = await readIndex(drive, folderId);
+      const { items: ids } = await readJsonArray<string>(drive, folderId, INDEX_FILE_NAME);
 
       const kpis = await Promise.all(
         ids.map(async (kpiId) => {

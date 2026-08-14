@@ -1,5 +1,6 @@
 import type { Achievement } from "../../kpi-engine/index.js";
 import type { DriveClient } from "./drive-client.js";
+import { readJsonArray, writeJsonArray } from "./json-blob-file.js";
 import { trackerFolderId } from "./tracker-folder.js";
 
 // One shared file rather than one-per-entity (kpi-storage.ts's convention) because DriveClient
@@ -17,51 +18,29 @@ export interface AchievementStorage {
   list(): Promise<Achievement[]>;
 }
 
-async function readAll(drive: DriveClient, folderId: string): Promise<{ fileId: string | null; achievements: Achievement[] }> {
-  const fileId = await drive.findFile(ACHIEVEMENTS_FILE_NAME, folderId);
-  const achievements: Achievement[] = fileId
-    ? (JSON.parse(await drive.readFile(fileId)) as Achievement[])
-    : [];
-  return { fileId, achievements };
-}
-
-async function writeAll(
-  drive: DriveClient,
-  folderId: string,
-  fileId: string | null,
-  achievements: Achievement[],
-): Promise<void> {
-  const content = JSON.stringify(achievements);
-  if (fileId) {
-    await drive.updateFile(fileId, content);
-  } else {
-    await drive.createFile(ACHIEVEMENTS_FILE_NAME, folderId, content);
-  }
-}
-
 export function createAchievementStorage(drive: DriveClient): AchievementStorage {
   return {
     async save(achievement) {
       const folderId = await trackerFolderId(drive);
-      const { fileId, achievements } = await readAll(drive, folderId);
+      const { fileId, items: achievements } = await readJsonArray<Achievement>(drive, folderId, ACHIEVEMENTS_FILE_NAME);
 
       const next = achievements.filter((a) => a.id !== achievement.id);
       next.push(achievement);
-      await writeAll(drive, folderId, fileId, next);
+      await writeJsonArray(drive, folderId, ACHIEVEMENTS_FILE_NAME, fileId, next);
     },
 
     async deleteBySourceId(sourceId) {
       const folderId = await trackerFolderId(drive);
-      const { fileId, achievements } = await readAll(drive, folderId);
+      const { fileId, items: achievements } = await readJsonArray<Achievement>(drive, folderId, ACHIEVEMENTS_FILE_NAME);
       if (!fileId) return;
 
       const next = achievements.filter((a) => a.sourceId !== sourceId);
-      await writeAll(drive, folderId, fileId, next);
+      await writeJsonArray(drive, folderId, ACHIEVEMENTS_FILE_NAME, fileId, next);
     },
 
     async list() {
       const folderId = await trackerFolderId(drive);
-      const { achievements } = await readAll(drive, folderId);
+      const { items: achievements } = await readJsonArray<Achievement>(drive, folderId, ACHIEVEMENTS_FILE_NAME);
       return achievements;
     },
   };

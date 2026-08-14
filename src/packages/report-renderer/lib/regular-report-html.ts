@@ -71,6 +71,12 @@ function renderAchievementItem(achievement: Achievement): string {
     `</li>`;
 }
 
+function emptyOr<T>(items: T[], emptyMessage: string, render: (items: T[]) => string): string {
+  return items.length === 0
+    ? `<p style="font-size:13px;color:#52514e;margin:0;">${emptyMessage}</p>`
+    : render(items);
+}
+
 function section(title: string, bodyHtml: string): string {
   return `<tr><td style="padding:0 24px 24px;">` +
     `<h2 style="font-size:14px;color:#0b0b0b;margin:0 0 12px;">${title}</h2>` +
@@ -84,20 +90,20 @@ export function renderRegularReportEmail(data: RegularReportData, options: Rende
     data.facts.map(renderFactRow).join("") +
     `</table>`;
 
-  const gapsBody = data.gaps.length === 0
-    ? `<p style="font-size:13px;color:#52514e;margin:0;">뒤처진 항목이 없어요. 잘하고 있어요.</p>`
-    : `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">` +
+  const gapsBody = emptyOr(data.gaps, "뒤처진 항목이 없어요. 잘하고 있어요.", (gaps) =>
+    `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">` +
       `<tr><th align="left" style="padding:8px;font-size:11px;color:#52514e;">항목</th><th align="right" style="padding:8px;font-size:11px;color:#52514e;">달성률</th><th align="right" style="padding:8px;font-size:11px;color:#52514e;">남은 양</th></tr>` +
-      data.gaps.map(renderGapRow).join("") +
-      `</table>`;
+      gaps.map(renderGapRow).join("") +
+      `</table>`,
+  );
 
-  const proposalsBody = data.proposals.length === 0
-    ? `<p style="font-size:13px;color:#52514e;margin:0;">지금은 제안할 항목이 없어요.</p>`
-    : data.proposals.map(renderProposalBox).join("");
+  const proposalsBody = emptyOr(data.proposals, "지금은 제안할 항목이 없어요.", (proposals) =>
+    proposals.map(renderProposalBox).join(""),
+  );
 
-  const achievementsBody = data.recentAchievements.length === 0
-    ? `<p style="font-size:13px;color:#52514e;margin:0;">이번 기간에 새로 발굴된 성과가 없어요.</p>`
-    : `<ul style="margin:0;padding-left:18px;">${data.recentAchievements.map(renderAchievementItem).join("")}</ul>`;
+  const achievementsBody = emptyOr(data.recentAchievements, "이번 기간에 새로 발굴된 성과가 없어요.", (achievements) =>
+    `<ul style="margin:0;padding-left:18px;">${achievements.map(renderAchievementItem).join("")}</ul>`,
+  );
 
   return `<!DOCTYPE html>
 <html lang="ko">
