@@ -9,6 +9,15 @@ export type {
   KpiState,
   ProgressEvent,
 } from "./lib/types.js";
+export type {
+  BuildRegularReportInput,
+  RegularReportData,
+  ReportFact,
+  ReportGap,
+  ReportPeriod,
+  ReportProposal,
+} from "./lib/regular-report.js";
+export { buildRegularReportData } from "./lib/regular-report.js";
 
 export function createKpi(definition: KpiDefinition): KpiState {
   return {

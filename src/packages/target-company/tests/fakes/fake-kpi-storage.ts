@@ -12,5 +12,8 @@ export function createFakeKpiStorage(): KpiStorage {
     async load(kpiId) {
       return kpis.get(kpiId) ?? null;
     },
+    async list() {
+      return [...kpis.values()];
+    },
   };
 }

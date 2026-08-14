@@ -46,4 +46,52 @@ describe("KpiStorage", () => {
 
     expect(loaded).toEqual(updated);
   });
+
+  test("list returns an empty array when nothing has been saved", async () => {
+    const storage = createKpiStorage(createInMemoryDriveClient());
+
+    expect(await storage.list()).toEqual([]);
+  });
+
+  test("list returns every saved KPI", async () => {
+    const storage = createKpiStorage(createInMemoryDriveClient());
+    const first = createKpi({
+      id: "apply-count-2026-08",
+      name: "이번 달 지원 건수",
+      category: "activity-count",
+      target: 10,
+    });
+    const second = recordProgress(
+      createKpi({
+        id: "ax-portfolio-project",
+        name: "AX 포트폴리오 프로젝트 완성 현황",
+        category: "project-completion",
+        target: 100,
+      }),
+      { category: "project-completion", percentage: 45 },
+    );
+
+    await storage.save(first);
+    await storage.save(second);
+    const listed = await storage.list();
+
+    expect(listed).toHaveLength(2);
+    expect(listed).toEqual(expect.arrayContaining([first, second]));
+  });
+
+  test("saving the same KPI id twice does not duplicate it in list", async () => {
+    const storage = createKpiStorage(createInMemoryDriveClient());
+    const kpi = createKpi({
+      id: "apply-count-2026-08",
+      name: "이번 달 지원 건수",
+      category: "activity-count",
+      target: 10,
+    });
+
+    await storage.save(kpi);
+    await storage.save(recordProgress(kpi, { category: "activity-count" }));
+    const listed = await storage.list();
+
+    expect(listed).toHaveLength(1);
+  });
 });
