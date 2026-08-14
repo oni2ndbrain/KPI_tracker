@@ -1,17 +1,10 @@
 import type { KpiState } from "../../kpi-engine/index.js";
 import type { DriveClient } from "./drive-client.js";
-
-const TRACKER_FOLDER_NAME = "KPI_tracker";
+import { trackerFolderId } from "./tracker-folder.js";
 
 export interface KpiStorage {
   save(kpi: KpiState): Promise<void>;
   load(kpiId: string): Promise<KpiState | null>;
-}
-
-async function trackerFolderId(drive: DriveClient): Promise<string> {
-  const existing = await drive.findFolder(TRACKER_FOLDER_NAME);
-  if (existing) return existing;
-  return drive.createFolder(TRACKER_FOLDER_NAME);
 }
 
 function fileNameFor(kpiId: string): string {

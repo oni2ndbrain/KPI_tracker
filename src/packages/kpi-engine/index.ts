@@ -1,7 +1,14 @@
 import { currentValueFor } from "./lib/categories.js";
 import type { KpiDefinition, KpiState, ProgressEvent } from "./lib/types.js";
 
-export type { KpiCategory, KpiDefinition, KpiState, ProgressEvent } from "./lib/types.js";
+export type {
+  Achievement,
+  AchievementSourceType,
+  KpiCategory,
+  KpiDefinition,
+  KpiState,
+  ProgressEvent,
+} from "./lib/types.js";
 
 export function createKpi(definition: KpiDefinition): KpiState {
   return {
