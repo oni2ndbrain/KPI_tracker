@@ -1,0 +1,55 @@
+name: Regular KPI Report
+
+# Sends the weekly/monthly regular report email from GitHub's cloud runners, so it goes out on
+# schedule regardless of whether the laptop is on (see docs/adr/0001-storage-and-execution-architecture.md).
+on:
+  schedule:
+    # Cron is UTC-only; times below are chosen so they land around 08:00 KST (UTC+9).
+    - cron: "0 23 * * 0" # weekly: Sun 23:00 UTC ≈ Mon 08:00 KST
+    - cron: "0 23 1 * *" # monthly: 1st 23:00 UTC ≈ 2nd 08:00 KST
+  workflow_dispatch:
+    inputs:
+      period:
+        description: "Report period to send"
+        required: true
+        type: choice
+        options:
+          - weekly
+          - monthly
+
+jobs:
+  send-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Determine report period
+        id: period
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "value=${{ inputs.period }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "0 23 * * 0" ]; then
+            echo "value=weekly" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=monthly" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Send regular report
+        run: npx tsx scripts/send-regular-report.ts
+        env:
+          REPORT_PERIOD: ${{ steps.period.outputs.value }}
+          REPORT_RECIPIENT_EMAIL: ${{ secrets.REPORT_RECIPIENT_EMAIL }}
+          DASHBOARD_URL: ${{ vars.DASHBOARD_URL }}
+          GOOGLE_DRIVE_CLIENT_ID: ${{ secrets.GOOGLE_DRIVE_CLIENT_ID }}
+          GOOGLE_DRIVE_CLIENT_SECRET: ${{ secrets.GOOGLE_DRIVE_CLIENT_SECRET }}
+          GOOGLE_DRIVE_REFRESH_TOKEN: ${{ secrets.GOOGLE_DRIVE_REFRESH_TOKEN }}
+          GOOGLE_GMAIL_CLIENT_ID: ${{ secrets.GOOGLE_GMAIL_CLIENT_ID }}
+          GOOGLE_GMAIL_CLIENT_SECRET: ${{ secrets.GOOGLE_GMAIL_CLIENT_SECRET }}
+          GOOGLE_GMAIL_REFRESH_TOKEN: ${{ secrets.GOOGLE_GMAIL_REFRESH_TOKEN }}

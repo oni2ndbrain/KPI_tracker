@@ -8,15 +8,18 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "check": "npm run typecheck && npm run test",
-    "verify:drive": "node --env-file=.env scripts/verify-google-drive-connection.mjs"
+    "verify:drive": "node --env-file=.env scripts/verify-google-drive-connection.mjs",
+    "send-regular-report": "tsx --env-file=.env scripts/send-regular-report.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
+    "tsx": "^4.23.12",
     "typescript": "^5.6.0",
     "vitest": "^2.1.0"
   },
   "dependencies": {
     "@googleapis/drive": "^21.0.0",
+    "@googleapis/gmail": "^18.0.0",
     "jszip": "^3.10.1",
     "pdf-parse": "^2.4.5"
   }
