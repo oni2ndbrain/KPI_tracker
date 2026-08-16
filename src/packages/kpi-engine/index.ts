@@ -18,6 +18,9 @@ export type {
   ReportProposal,
 } from "./lib/regular-report.js";
 export { buildRegularReportData } from "./lib/regular-report.js";
+export type { AchievementReportData, BuildAchievementReportInput } from "./lib/achievement-report.js";
+export { buildAchievementReportData } from "./lib/achievement-report.js";
+export { justReachedTarget } from "./lib/achievement-detection.js";
 
 export function createKpi(definition: KpiDefinition): KpiState {
   return {

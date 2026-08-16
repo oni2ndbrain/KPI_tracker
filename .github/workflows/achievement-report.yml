@@ -1,0 +1,51 @@
+name: KPI Achievement Report
+
+# Sent immediately when a KPI crosses its target, not on a schedule — triggered either by hand
+# (workflow_dispatch) or by another process posting a repository_dispatch event the moment
+# kpi-engine's justReachedTarget() fires, so the email goes out from the cloud regardless of
+# whether the machine that recorded the progress is still on (see
+# docs/adr/0001-storage-and-execution-architecture.md).
+on:
+  repository_dispatch:
+    types: [kpi-achieved]
+  workflow_dispatch:
+    inputs:
+      achieved_kpi_id:
+        description: "id of the KPI that just reached its target"
+        required: true
+        type: string
+
+jobs:
+  send-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Determine achieved KPI id
+        id: kpi
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "value=${{ inputs.achieved_kpi_id }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${{ github.event.client_payload.achieved_kpi_id }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Send achievement report
+        run: npx tsx scripts/send-achievement-report.ts
+        env:
+          ACHIEVED_KPI_ID: ${{ steps.kpi.outputs.value }}
+          REPORT_RECIPIENT_EMAIL: ${{ secrets.REPORT_RECIPIENT_EMAIL }}
+          DASHBOARD_URL: ${{ vars.DASHBOARD_URL }}
+          GOOGLE_DRIVE_CLIENT_ID: ${{ secrets.GOOGLE_DRIVE_CLIENT_ID }}
+          GOOGLE_DRIVE_CLIENT_SECRET: ${{ secrets.GOOGLE_DRIVE_CLIENT_SECRET }}
+          GOOGLE_DRIVE_REFRESH_TOKEN: ${{ secrets.GOOGLE_DRIVE_REFRESH_TOKEN }}
+          GOOGLE_GMAIL_CLIENT_ID: ${{ secrets.GOOGLE_GMAIL_CLIENT_ID }}
+          GOOGLE_GMAIL_CLIENT_SECRET: ${{ secrets.GOOGLE_GMAIL_CLIENT_SECRET }}
+          GOOGLE_GMAIL_REFRESH_TOKEN: ${{ secrets.GOOGLE_GMAIL_REFRESH_TOKEN }}
