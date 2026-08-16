@@ -61,3 +61,27 @@ export interface TargetCompany {
    * the calendar adapter's sync — null until a matching calendar entry has been found. */
   applicationPeriod: ApplicationPeriod | null;
 }
+
+/** A generated 역량 진단 퀴즈 question, not yet answered. */
+export interface QuizQuestion {
+  id: string;
+  /** The required competency this question probes. */
+  competency: string;
+  prompt: string;
+}
+
+/** A graded answer to one QuizQuestion, as persisted. Whether the id came from voice-to-text
+ * dictation or direct typing is irrelevant here — grading treats both identically. */
+export interface QuizAnswerRecord {
+  id: string;
+  questionId: string;
+  competency: string;
+  questionPrompt: string;
+  answerText: string;
+  /** 1-5. */
+  score: number;
+  referencesPersonalExperience: boolean;
+  /** True when the answer follows 현상 → 후속공정 영향 → 원인 → 해결 structure. */
+  isStructured: boolean;
+  answeredAt: string;
+}

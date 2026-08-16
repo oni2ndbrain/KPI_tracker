@@ -9,6 +9,8 @@ export type {
   KpiDefinition,
   KpiState,
   ProgressEvent,
+  QuizAnswerRecord,
+  QuizQuestion,
   TargetCompany,
 } from "./lib/types.js";
 export type {

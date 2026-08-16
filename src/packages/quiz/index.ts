@@ -1,0 +1,10 @@
+export type { QuizAnswerRecord, QuizQuestion } from "../kpi-engine/index.js";
+export type { QuizGradingResult, QuizQuestionCandidate } from "./lib/types.js";
+export type { QuizQuestionGenerationInput } from "./lib/question-generation.js";
+export type { QuizQuestionGenerationClient } from "./lib/question-generation-client.js";
+export { buildQuizQuestionPrompt, parseQuizQuestionResponse } from "./lib/question-generation.js";
+export type { QuizGradingInput } from "./lib/grading.js";
+export type { QuizGradingClient } from "./lib/grading-client.js";
+export { buildQuizGradingPrompt, parseQuizGradingResponse } from "./lib/grading.js";
+export type { QuizSession, QuizSessionDeps, SubmitAnswerInput } from "./lib/quiz-session.js";
+export { createQuizSession, QUIZ_SCORE_KPI_ID } from "./lib/quiz-session.js";

@@ -7,3 +7,5 @@ export type { TargetCompanyStorage } from "./lib/target-company-storage.js";
 export { createTargetCompanyStorage } from "./lib/target-company-storage.js";
 export type { QuizActivityStorage } from "./lib/quiz-activity-storage.js";
 export { createQuizActivityStorage } from "./lib/quiz-activity-storage.js";
+export type { QuizResultStorage } from "./lib/quiz-result-storage.js";
+export { createQuizResultStorage } from "./lib/quiz-result-storage.js";
