@@ -1,4 +1,5 @@
-export type { JdExtractionResult, TargetCompany } from "./lib/types.js";
+export type { JdExtractionResult } from "./lib/types.js";
+export type { TargetCompany } from "../kpi-engine/index.js";
 export type { JdExtractionClient } from "./lib/jd-extraction-client.js";
 export type { LlmWikiSearch } from "./lib/llm-wiki-search.js";
 export { buildJdExtractionPrompt, parseJdExtractionResponse } from "./lib/jd-extraction.js";

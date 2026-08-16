@@ -1,6 +1,7 @@
 import type { AchievementReportData } from "../../kpi-engine/index.js";
 import { paletteFor } from "./palette.js";
 import {
+  banner,
   dashboardButtonRow,
   dateOnly,
   emptyOr,
@@ -17,11 +18,7 @@ export interface RenderAchievementReportOptions {
 
 function achievementBanner(data: AchievementReportData): string {
   const palette = paletteFor(data.achievedKpi.category);
-  return `<tr><td style="padding:20px 24px 0;">` +
-    `<div style="background:${palette.bg};color:${palette.text};border-radius:10px;padding:18px 20px;font-size:16px;font-weight:700;">` +
-    `🎉 목표 달성! ${escapeHtml(data.achievedKpi.kpiName)}` +
-    `</div>` +
-    `</td></tr>`;
+  return banner(palette.bg, palette.text, `🎉 목표 달성! ${escapeHtml(data.achievedKpi.kpiName)}`);
 }
 
 export function renderAchievementReportEmail(data: AchievementReportData, options: RenderAchievementReportOptions): string {

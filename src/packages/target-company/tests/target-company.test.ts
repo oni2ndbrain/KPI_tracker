@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import { createTargetCompanyTracker } from "../index.js";
 import { createFakeKpiStorage } from "./fakes/fake-kpi-storage.js";
 import { createFakeLlmWikiSearch } from "./fakes/fake-llm-wiki-search.js";
+import { createFakeTargetCompanyStorage } from "./fakes/fake-target-company-storage.js";
 import { createFixtureJdExtractionClient } from "./fakes/fixture-jd-extraction-client.js";
 
 function trackerWithFixtures() {
@@ -17,8 +18,9 @@ function trackerWithFixtures() {
   });
   const wikiSearch = createFakeLlmWikiSearch(["반도체 공정 이해", "Python 데이터 분석"]);
   const kpiStorage = createFakeKpiStorage();
+  const targetCompanyStorage = createFakeTargetCompanyStorage();
 
-  return createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage });
+  return createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage });
 }
 
 describe("createTargetCompanyTracker: register", () => {
@@ -50,7 +52,8 @@ describe("createTargetCompanyTracker: register", () => {
     });
     const wikiSearch = createFakeLlmWikiSearch([]);
     const kpiStorage = createFakeKpiStorage();
-    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage });
+    const targetCompanyStorage = createFakeTargetCompanyStorage();
+    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage });
 
     const company = await tracker.register({ id: "samsung", name: "삼성전자", jdText: "samsung-jd" });
 
@@ -70,7 +73,8 @@ describe("createTargetCompanyTracker: register", () => {
     });
     const wikiSearch = createFakeLlmWikiSearch(["a", "c"]);
     const kpiStorage = createFakeKpiStorage();
-    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage });
+    const targetCompanyStorage = createFakeTargetCompanyStorage();
+    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage });
 
     const company = await tracker.register({ id: "samsung", name: "삼성전자", jdText: "samsung-jd" });
 
@@ -85,12 +89,27 @@ describe("createTargetCompanyTracker: register", () => {
     });
     const wikiSearch = createFakeLlmWikiSearch([]);
     const kpiStorage = createFakeKpiStorage();
-    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage });
+    const targetCompanyStorage = createFakeTargetCompanyStorage();
+    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage });
 
     const company = await tracker.register({ id: "samsung", name: "삼성전자", jdText: "samsung-jd" });
 
     const savedKpi = await kpiStorage.load(company.kpiId);
     expect(savedKpi?.currentValue).toBe(0);
+  });
+
+  test("persists the registered target company (name/deadline/gap), not just its derived KPI", async () => {
+    const jdExtractor = createFixtureJdExtractionClient({
+      "samsung-jd": { competencies: ["a", "b", "c", "d"], deadline: "2026-09-30" },
+    });
+    const wikiSearch = createFakeLlmWikiSearch(["a"]);
+    const kpiStorage = createFakeKpiStorage();
+    const targetCompanyStorage = createFakeTargetCompanyStorage();
+    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage });
+
+    const company = await tracker.register({ id: "samsung", name: "삼성전자", jdText: "samsung-jd" });
+
+    expect(await targetCompanyStorage.list()).toEqual([company]);
   });
 
   test("tracks two or more target companies independently", async () => {

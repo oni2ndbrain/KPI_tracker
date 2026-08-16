@@ -10,7 +10,9 @@
     "check": "npm run typecheck && npm run test",
     "verify:drive": "node --env-file=.env scripts/verify-google-drive-connection.mjs",
     "send-regular-report": "tsx --env-file=.env scripts/send-regular-report.ts",
-    "send-achievement-report": "tsx --env-file=.env scripts/send-achievement-report.ts"
+    "send-achievement-report": "tsx --env-file=.env scripts/send-achievement-report.ts",
+    "send-deadline-alerts": "tsx --env-file=.env scripts/send-deadline-alerts.ts",
+    "send-quiz-inactivity-alert": "tsx --env-file=.env scripts/send-quiz-inactivity-alert.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

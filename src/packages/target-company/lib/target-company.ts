@@ -1,8 +1,8 @@
 import { createKpi, recordProgress } from "../../kpi-engine/index.js";
-import type { KpiStorage } from "../../kpi-storage/index.js";
+import type { TargetCompany } from "../../kpi-engine/index.js";
+import type { KpiStorage, TargetCompanyStorage } from "../../kpi-storage/index.js";
 import type { JdExtractionClient } from "./jd-extraction-client.js";
 import type { LlmWikiSearch } from "./llm-wiki-search.js";
-import type { TargetCompany } from "./types.js";
 
 export interface RegisterTargetCompanyInput {
   id: string;
@@ -20,6 +20,10 @@ export interface TargetCompanyTrackerDeps {
   jdExtractor: JdExtractionClient;
   wikiSearch: LlmWikiSearch;
   kpiStorage: KpiStorage;
+  /** Persists the registered TargetCompany record (name, deadline, gap) itself — kpiStorage only
+   * persists its derived KPI, so a separate cloud job (e.g. deadline alerts) can enumerate
+   * target companies without this repo's in-memory-only tracker instance still being alive. */
+  targetCompanyStorage: TargetCompanyStorage;
 }
 
 function competencyFillKpiIdFor(targetCompanyId: string): string {
@@ -59,6 +63,7 @@ export function createTargetCompanyTracker(deps: TargetCompanyTrackerDeps): Targ
         kpiId,
       };
       companies.set(id, targetCompany);
+      await deps.targetCompanyStorage.save(targetCompany);
       return targetCompany;
     },
 

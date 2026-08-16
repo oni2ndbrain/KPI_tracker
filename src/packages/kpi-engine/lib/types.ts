@@ -40,3 +40,14 @@ export interface Achievement {
   description: string;
   discoveredAt: string;
 }
+
+export interface TargetCompany {
+  id: string;
+  name: string;
+  requiredCompetencies: string[];
+  /** ISO date (YYYY-MM-DD) — the application deadline, and the basis for D-14/D-7/D-1 alerts. */
+  deadline: string;
+  /** Required competencies with no related material found in the LLM Wiki. */
+  gap: string[];
+  kpiId: string;
+}

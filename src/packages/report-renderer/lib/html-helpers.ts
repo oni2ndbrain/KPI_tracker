@@ -51,10 +51,24 @@ export function factsTable(facts: ReportFact[]): string {
     `</table>`;
 }
 
-export function renderProposalBox(proposal: ReportProposal): string {
+export function messageBox(message: string): string {
   return `<div style="background:#f1efe8;border-left:4px solid #5DCAA5;border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:13px;color:#0b0b0b;">` +
-    escapeHtml(proposal.message) +
+    escapeHtml(message) +
     `</div>`;
+}
+
+export function renderProposalBox(proposal: ReportProposal): string {
+  return messageBox(proposal.message);
+}
+
+/** The colored, celebratory/urgent banner row shared by achievement and deadline-alert emails —
+ * the visual "this matters right now" signal at the top of the email. */
+export function banner(bg: string, text: string, message: string): string {
+  return `<tr><td style="padding:20px 24px 0;">` +
+    `<div style="background:${bg};color:${text};border-radius:10px;padding:18px 20px;font-size:16px;font-weight:700;">` +
+    message +
+    `</div>` +
+    `</td></tr>`;
 }
 
 export function renderAchievementItem(achievement: Achievement): string {

@@ -8,6 +8,7 @@ export type {
   KpiDefinition,
   KpiState,
   ProgressEvent,
+  TargetCompany,
 } from "./lib/types.js";
 export type {
   BuildRegularReportInput,
@@ -21,6 +22,10 @@ export { buildRegularReportData } from "./lib/regular-report.js";
 export type { AchievementReportData, BuildAchievementReportInput } from "./lib/achievement-report.js";
 export { buildAchievementReportData } from "./lib/achievement-report.js";
 export { justReachedTarget } from "./lib/achievement-detection.js";
+export type { DeadlineAlertData, DeadlineAlertInput, DeadlineCheckpoint } from "./lib/deadline-alert.js";
+export { buildDeadlineAlertData, shouldSendDeadlineAlert } from "./lib/deadline-alert.js";
+export type { QuizInactivityAlertData, QuizInactivityInput } from "./lib/quiz-inactivity-alert.js";
+export { buildQuizInactivityAlertData, shouldSendQuizInactivityAlert } from "./lib/quiz-inactivity-alert.js";
 
 export function createKpi(definition: KpiDefinition): KpiState {
   return {
