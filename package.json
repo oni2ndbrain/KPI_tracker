@@ -12,7 +12,8 @@
     "send-regular-report": "tsx --env-file=.env scripts/send-regular-report.ts",
     "send-achievement-report": "tsx --env-file=.env scripts/send-achievement-report.ts",
     "send-deadline-alerts": "tsx --env-file=.env scripts/send-deadline-alerts.ts",
-    "send-quiz-inactivity-alert": "tsx --env-file=.env scripts/send-quiz-inactivity-alert.ts"
+    "send-quiz-inactivity-alert": "tsx --env-file=.env scripts/send-quiz-inactivity-alert.ts",
+    "sync-calendar-application-periods": "tsx --env-file=.env scripts/sync-calendar-application-periods.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
@@ -21,6 +22,7 @@
     "vitest": "^2.1.0"
   },
   "dependencies": {
+    "@googleapis/calendar": "^16.0.0",
     "@googleapis/drive": "^21.0.0",
     "@googleapis/gmail": "^18.0.0",
     "jszip": "^3.10.1",

@@ -1,6 +1,8 @@
+import type { CalendarClient } from "../../calendar/index.js";
 import { createKpi, recordProgress } from "../../kpi-engine/index.js";
 import type { TargetCompany } from "../../kpi-engine/index.js";
 import type { KpiStorage, TargetCompanyStorage } from "../../kpi-storage/index.js";
+import { buildDeadlineEvent } from "./calendar-sync.js";
 import type { JdExtractionClient } from "./jd-extraction-client.js";
 import type { LlmWikiSearch } from "./llm-wiki-search.js";
 
@@ -24,6 +26,11 @@ export interface TargetCompanyTrackerDeps {
    * persists its derived KPI, so a separate cloud job (e.g. deadline alerts) can enumerate
    * target companies without this repo's in-memory-only tracker instance still being alive. */
   targetCompanyStorage: TargetCompanyStorage;
+  /** Writes the extracted deadline to the user's Google Calendar as part of registration. The
+   * reverse direction — reading application-period entries the user typed in by hand back into
+   * TargetCompany records — runs separately (see scripts/sync-calendar-application-periods.ts),
+   * since it isn't tied to a single registration event. */
+  calendarClient: CalendarClient;
 }
 
 function competencyFillKpiIdFor(targetCompanyId: string): string {
@@ -61,9 +68,11 @@ export function createTargetCompanyTracker(deps: TargetCompanyTrackerDeps): Targ
         deadline,
         gap,
         kpiId,
+        applicationPeriod: null,
       };
       companies.set(id, targetCompany);
       await deps.targetCompanyStorage.save(targetCompany);
+      await deps.calendarClient.createEvent(buildDeadlineEvent({ name, deadline }));
       return targetCompany;
     },
 

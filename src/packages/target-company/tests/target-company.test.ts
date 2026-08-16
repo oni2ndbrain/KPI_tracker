@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { createTargetCompanyTracker } from "../index.js";
+import { createFakeCalendarClient } from "./fakes/fake-calendar-client.js";
 import { createFakeKpiStorage } from "./fakes/fake-kpi-storage.js";
 import { createFakeLlmWikiSearch } from "./fakes/fake-llm-wiki-search.js";
 import { createFakeTargetCompanyStorage } from "./fakes/fake-target-company-storage.js";
@@ -19,8 +20,9 @@ function trackerWithFixtures() {
   const wikiSearch = createFakeLlmWikiSearch(["반도체 공정 이해", "Python 데이터 분석"]);
   const kpiStorage = createFakeKpiStorage();
   const targetCompanyStorage = createFakeTargetCompanyStorage();
+  const calendarClient = createFakeCalendarClient();
 
-  return createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage });
+  return createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage, calendarClient });
 }
 
 describe("createTargetCompanyTracker: register", () => {
@@ -53,7 +55,8 @@ describe("createTargetCompanyTracker: register", () => {
     const wikiSearch = createFakeLlmWikiSearch([]);
     const kpiStorage = createFakeKpiStorage();
     const targetCompanyStorage = createFakeTargetCompanyStorage();
-    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage });
+    const calendarClient = createFakeCalendarClient();
+    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage, calendarClient });
 
     const company = await tracker.register({ id: "samsung", name: "삼성전자", jdText: "samsung-jd" });
 
@@ -74,7 +77,8 @@ describe("createTargetCompanyTracker: register", () => {
     const wikiSearch = createFakeLlmWikiSearch(["a", "c"]);
     const kpiStorage = createFakeKpiStorage();
     const targetCompanyStorage = createFakeTargetCompanyStorage();
-    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage });
+    const calendarClient = createFakeCalendarClient();
+    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage, calendarClient });
 
     const company = await tracker.register({ id: "samsung", name: "삼성전자", jdText: "samsung-jd" });
 
@@ -90,7 +94,8 @@ describe("createTargetCompanyTracker: register", () => {
     const wikiSearch = createFakeLlmWikiSearch([]);
     const kpiStorage = createFakeKpiStorage();
     const targetCompanyStorage = createFakeTargetCompanyStorage();
-    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage });
+    const calendarClient = createFakeCalendarClient();
+    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage, calendarClient });
 
     const company = await tracker.register({ id: "samsung", name: "삼성전자", jdText: "samsung-jd" });
 
@@ -105,11 +110,32 @@ describe("createTargetCompanyTracker: register", () => {
     const wikiSearch = createFakeLlmWikiSearch(["a"]);
     const kpiStorage = createFakeKpiStorage();
     const targetCompanyStorage = createFakeTargetCompanyStorage();
-    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage });
+    const calendarClient = createFakeCalendarClient();
+    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage, calendarClient });
 
     const company = await tracker.register({ id: "samsung", name: "삼성전자", jdText: "samsung-jd" });
 
     expect(await targetCompanyStorage.list()).toEqual([company]);
+  });
+
+  test("writes the extracted deadline to the calendar as an all-day event", async () => {
+    const calendarClient = createFakeCalendarClient();
+    const jdExtractor = createFixtureJdExtractionClient({
+      "samsung-jd": { competencies: ["a", "b", "c", "d"], deadline: "2026-09-30" },
+    });
+    const wikiSearch = createFakeLlmWikiSearch([]);
+    const kpiStorage = createFakeKpiStorage();
+    const targetCompanyStorage = createFakeTargetCompanyStorage();
+    const tracker = createTargetCompanyTracker({ jdExtractor, wikiSearch, kpiStorage, targetCompanyStorage, calendarClient });
+
+    await tracker.register({ id: "samsung", name: "삼성전자", jdText: "samsung-jd" });
+
+    expect(calendarClient.created).toHaveLength(1);
+    expect(calendarClient.created[0]).toMatchObject({
+      title: "삼성전자 지원 마감일",
+      start: "2026-09-30",
+      end: "2026-10-01",
+    });
   });
 
   test("tracks two or more target companies independently", async () => {

@@ -41,6 +41,13 @@ export interface Achievement {
   discoveredAt: string;
 }
 
+export interface ApplicationPeriod {
+  /** ISO date (YYYY-MM-DD) */
+  start: string;
+  /** ISO date (YYYY-MM-DD) */
+  end: string;
+}
+
 export interface TargetCompany {
   id: string;
   name: string;
@@ -50,4 +57,7 @@ export interface TargetCompany {
   /** Required competencies with no related material found in the LLM Wiki. */
   gap: string[];
   kpiId: string;
+  /** The application period as entered by hand in the user's Google Calendar, read back in via
+   * the calendar adapter's sync — null until a matching calendar entry has been found. */
+  applicationPeriod: ApplicationPeriod | null;
 }

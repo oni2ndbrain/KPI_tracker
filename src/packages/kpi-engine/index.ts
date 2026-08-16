@@ -4,6 +4,7 @@ import type { KpiDefinition, KpiState, ProgressEvent } from "./lib/types.js";
 export type {
   Achievement,
   AchievementSourceType,
+  ApplicationPeriod,
   KpiCategory,
   KpiDefinition,
   KpiState,

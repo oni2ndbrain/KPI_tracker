@@ -11,6 +11,7 @@ function targetCompany(overrides: Partial<TargetCompany> = {}): TargetCompany {
     deadline: "2026-09-30",
     gap: ["SPC"],
     kpiId: "samsung-competency-fill",
+    applicationPeriod: null,
     ...overrides,
   };
 }

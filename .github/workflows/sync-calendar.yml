@@ -1,0 +1,32 @@
+name: KPI Calendar Sync
+
+# Reads application-period entries the user typed into their Google Calendar by hand and reflects
+# them into the matching target companies' records — runs from GitHub's cloud runners so it stays
+# current regardless of whether the laptop is on (see docs/adr/0001-storage-and-execution-architecture.md).
+on:
+  schedule:
+    - cron: "0 22 * * *" # daily, 22:00 UTC ≈ 07:00 KST
+  workflow_dispatch: {}
+
+jobs:
+  sync-calendar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Sync application periods from Google Calendar
+        run: npx tsx scripts/sync-calendar-application-periods.ts
+        env:
+          GOOGLE_DRIVE_CLIENT_ID: ${{ secrets.GOOGLE_DRIVE_CLIENT_ID }}
+          GOOGLE_DRIVE_CLIENT_SECRET: ${{ secrets.GOOGLE_DRIVE_CLIENT_SECRET }}
+          GOOGLE_DRIVE_REFRESH_TOKEN: ${{ secrets.GOOGLE_DRIVE_REFRESH_TOKEN }}
+          GOOGLE_CALENDAR_CLIENT_ID: ${{ secrets.GOOGLE_CALENDAR_CLIENT_ID }}
+          GOOGLE_CALENDAR_CLIENT_SECRET: ${{ secrets.GOOGLE_CALENDAR_CLIENT_SECRET }}
+          GOOGLE_CALENDAR_REFRESH_TOKEN: ${{ secrets.GOOGLE_CALENDAR_REFRESH_TOKEN }}
