@@ -27,6 +27,7 @@ function samsungCompany(overrides: Partial<TargetCompany> = {}): TargetCompany {
     gap: [],
     kpiId: "samsung-competency-fill",
     applicationPeriod: null,
+    appliedAt: null,
     ...overrides,
   };
 }

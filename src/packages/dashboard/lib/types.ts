@@ -36,6 +36,10 @@ export interface TargetCompanyRow {
   /** 0-1, clamped, from the linked 역량 채우기 KPI's achievementRate — 0 if the KPI can't be found. */
   progressRate: number;
   gap: string[];
+  /** The linked 역량 채우기 KPI's id — the target of the "역량 점수 직접 조정" action. */
+  kpiId: string;
+  /** ISO timestamp of the "지원 완료" check, or null if not yet marked applied. */
+  appliedAt: string | null;
 }
 
 /** One bar of the "역량 갭 (JD 요구 vs 보유)" chart. requiredScore is always 100 (the JD asks for

@@ -18,7 +18,9 @@ export interface QuizInactivityAlertData {
 }
 
 function daysSince(fromIso: string, today: string): number {
-  return Math.floor(daysBetween(fromIso, today));
+  // Clamped at 0: `today` may be a bare date (implicit midnight) while a same-day fromIso carries
+  // a later time-of-day, which would otherwise floor to -1 for a quiz taken earlier today.
+  return Math.max(0, Math.floor(daysBetween(fromIso, today)));
 }
 
 /** True once 7+ days have passed since the last completed quiz, or if none has ever been taken. */

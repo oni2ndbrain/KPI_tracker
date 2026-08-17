@@ -69,6 +69,7 @@ export function createTargetCompanyTracker(deps: TargetCompanyTrackerDeps): Targ
         gap,
         kpiId,
         applicationPeriod: null,
+        appliedAt: null,
       };
       companies.set(id, targetCompany);
       await deps.targetCompanyStorage.save(targetCompany);

@@ -2,8 +2,15 @@ import { describe, expect, test } from "vitest";
 import type { KpiState, TargetCompany } from "../../kpi-engine/index.js";
 import { buildTargetCompanyRows } from "../index.js";
 
-function company(id: string, name: string, deadline: string, kpiId: string, gap: string[] = []): TargetCompany {
-  return { id, name, requiredCompetencies: [], deadline, gap, kpiId, applicationPeriod: null };
+function company(
+  id: string,
+  name: string,
+  deadline: string,
+  kpiId: string,
+  gap: string[] = [],
+  appliedAt: string | null = null,
+): TargetCompany {
+  return { id, name, requiredCompetencies: [], deadline, gap, kpiId, applicationPeriod: null, appliedAt };
 }
 
 function kpi(id: string, achievementRate: number): KpiState {
@@ -91,5 +98,30 @@ describe("buildTargetCompanyRows", () => {
       TODAY,
     );
     expect(row?.gap).toEqual(["포토공정", "품질관리"]);
+  });
+
+  test("passes through the linked KPI id, for the 역량 점수 조정 action", () => {
+    const [row] = buildTargetCompanyRows(
+      [company("samsung", "삼성전자", "2026-09-04", "samsung-kpi")],
+      [kpi("samsung-kpi", 0.62)],
+      TODAY,
+    );
+    expect(row?.kpiId).toBe("samsung-kpi");
+  });
+
+  test("passes through appliedAt unchanged", () => {
+    const [applied] = buildTargetCompanyRows(
+      [company("samsung", "삼성전자", "2026-09-04", "samsung-kpi", [], "2026-08-10T00:00:00.000Z")],
+      [kpi("samsung-kpi", 0.62)],
+      TODAY,
+    );
+    expect(applied?.appliedAt).toBe("2026-08-10T00:00:00.000Z");
+
+    const [notApplied] = buildTargetCompanyRows(
+      [company("samsung", "삼성전자", "2026-09-04", "samsung-kpi")],
+      [kpi("samsung-kpi", 0.62)],
+      TODAY,
+    );
+    expect(notApplied?.appliedAt).toBeNull();
   });
 });

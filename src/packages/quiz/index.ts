@@ -11,3 +11,6 @@ export { buildStudyRecommendationPrompt, parseStudyRecommendationResponse } from
 export type { StudyRecommendationClient } from "./lib/study-recommendation-client.js";
 export type { QuizSession, QuizSessionDeps, SubmitAnswerInput } from "./lib/quiz-session.js";
 export { createQuizSession, QUIZ_SCORE_KPI_ID } from "./lib/quiz-session.js";
+export { createHeuristicQuizQuestionGenerationClient } from "./lib/heuristic-question-generation-client.js";
+export { createHeuristicQuizGradingClient } from "./lib/heuristic-grading-client.js";
+export { createHeuristicStudyRecommendationClient } from "./lib/heuristic-study-recommendation-client.js";

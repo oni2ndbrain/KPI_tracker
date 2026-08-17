@@ -60,6 +60,9 @@ export interface TargetCompany {
   /** The application period as entered by hand in the user's Google Calendar, read back in via
    * the calendar adapter's sync — null until a matching calendar entry has been found. */
   applicationPeriod: ApplicationPeriod | null;
+  /** ISO timestamp of when the 관리 화면's "지원 완료" check was made — null until the user marks
+   * this target company as applied to. */
+  appliedAt: string | null;
 }
 
 /** A generated 역량 진단 퀴즈 question, not yet answered. */

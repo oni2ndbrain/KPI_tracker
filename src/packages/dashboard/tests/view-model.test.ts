@@ -20,6 +20,7 @@ function company(id: string, kpiId: string): TargetCompany {
     gap: [],
     kpiId,
     applicationPeriod: null,
+    appliedAt: null,
   };
 }
 

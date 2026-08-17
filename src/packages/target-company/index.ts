@@ -10,3 +10,7 @@ export type {
   TargetCompanyTracker,
   TargetCompanyTrackerDeps,
 } from "./lib/target-company.js";
+export { adjustCompetencyScore, markApplicationComplete } from "./lib/manual-actions.js";
+export type { AdjustCompetencyScoreDeps, MarkApplicationCompleteDeps } from "./lib/manual-actions.js";
+export { createHeuristicJdExtractionClient } from "./lib/heuristic-jd-extraction-client.js";
+export { createNoCoverageWikiSearch } from "./lib/no-coverage-wiki-search.js";

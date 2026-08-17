@@ -33,6 +33,8 @@ export function buildTargetCompanyRows(
         urgency: urgencyFor(daysUntilDeadline),
         progressRate: linkedKpi ? Math.max(0, Math.min(1, linkedKpi.achievementRate)) : 0,
         gap: company.gap,
+        kpiId: company.kpiId,
+        appliedAt: company.appliedAt,
       };
     })
     .sort((a, b) => a.daysUntilDeadline - b.daysUntilDeadline);

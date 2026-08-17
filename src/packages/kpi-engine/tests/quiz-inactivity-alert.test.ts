@@ -51,4 +51,15 @@ describe("buildQuizInactivityAlertData", () => {
 
     expect(data.daysSinceLastQuiz).toBeNull();
   });
+
+  test("clamps to 0 when a same-day quiz timestamp falls after a bare-date 'today'", () => {
+    // today is a date-only string (implicit midnight); a quiz taken earlier the same real day
+    // carries a later time-of-day, which would otherwise floor to -1.
+    const data = buildQuizInactivityAlertData({
+      lastQuizAt: "2026-08-17T12:00:00.000Z",
+      today: "2026-08-17",
+    });
+
+    expect(data.daysSinceLastQuiz).toBe(0);
+  });
 });

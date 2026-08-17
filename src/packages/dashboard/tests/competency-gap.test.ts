@@ -11,6 +11,7 @@ function company(id: string, requiredCompetencies: string[], gap: string[]): Tar
     gap,
     kpiId: `${id}-kpi`,
     applicationPeriod: null,
+    appliedAt: null,
   };
 }
 

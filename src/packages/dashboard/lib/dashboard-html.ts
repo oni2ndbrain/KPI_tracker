@@ -88,6 +88,29 @@ function kpiTablePanelHtml(model: DashboardViewModel): string {
   );
 }
 
+function appliedControlHtml(row: TargetCompanyRow): string {
+  if (row.appliedAt) {
+    return `<span style="font-size:11px; color:var(--text-success); font-weight:500;">✓ 지원 완료</span>`;
+  }
+  return (
+    `<form method="post" action="/actions/mark-applied" style="margin:0;">` +
+    `<input type="hidden" name="companyId" value="${escapeHtml(row.id)}">` +
+    `<button type="submit" style="font-size:11px; color:var(--text-accent); text-decoration:underline;">지원 완료 체크</button>` +
+    `</form>`
+  );
+}
+
+function adjustCompetencyScoreFormHtml(row: TargetCompanyRow): string {
+  return (
+    `<form method="post" action="/actions/adjust-competency-score" style="display:flex; gap:6px; align-items:center; margin:0;">` +
+    `<input type="hidden" name="kpiId" value="${escapeHtml(row.kpiId)}">` +
+    `<label style="font-size:11px; color:var(--text-muted);">역량 점수 조정</label>` +
+    `<input type="number" name="amount" value="1" step="1" style="width:48px; font-size:12px; padding:2px 4px; border:0.5px solid var(--border); border-radius:4px;">` +
+    `<button type="submit" style="font-size:11px; color:var(--text-accent); text-decoration:underline;">적용</button>` +
+    `</form>`
+  );
+}
+
 function targetCompanyRowHtml(row: TargetCompanyRow): string {
   const gapText = row.gap.length === 0 ? "부족 역량 없음" : `부족 역량: ${row.gap.join(", ")}`;
   return (
@@ -95,6 +118,23 @@ function targetCompanyRowHtml(row: TargetCompanyRow): string {
     `<div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;"><span>${escapeHtml(row.name)}</span><span style="color:${URGENCY_COLOR_VAR[row.urgency]}; font-weight:500;">D-${row.daysUntilDeadline}</span></div>` +
     `<div style="background:var(--surface-1); border-radius:6px; height:8px; overflow:hidden;"><div style="width:${Math.round(row.progressRate * 100)}%; height:100%; background:#5DCAA5;"></div></div>` +
     `<p style="font-size:11px; color:var(--text-muted); margin:6px 0 0;">${escapeHtml(gapText)}</p>` +
+    `<div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; gap:8px; flex-wrap:wrap;">` +
+    appliedControlHtml(row) +
+    adjustCompetencyScoreFormHtml(row) +
+    `</div>` +
+    `</div>`
+  );
+}
+
+function registerTargetCompanyFormHtml(): string {
+  return (
+    `<div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; padding: 14px; margin-top: 14px;">` +
+    `<p style="font-size: 13px; font-weight: 500; margin: 0 0 10px;">새 목표 회사 등록</p>` +
+    `<form method="post" action="/actions/register-target-company" style="display:flex; flex-direction:column; gap:8px;">` +
+    `<input type="text" name="name" placeholder="회사명 (예: 삼성전자 · 공정기술)" required style="font-size:13px; padding:8px; border:0.5px solid var(--border); border-radius:6px; font-family:inherit;">` +
+    `<textarea name="jdText" placeholder="채용공고 원문을 붙여넣어 주세요. 예)\n자격요건: 반도체 공정 이해, 통계적 공정관리(SPC)\n지원마감: 2026-09-30" required rows="5" style="font-size:13px; padding:8px; border:0.5px solid var(--border); border-radius:6px; font-family:inherit; resize:vertical;"></textarea>` +
+    `<button type="submit" style="align-self:flex-start; font-size:13px; font-weight:500; color:var(--text-accent); background:var(--bg-accent); padding:7px 14px; border-radius:6px;">등록</button>` +
+    `</form>` +
     `</div>`
   );
 }
@@ -106,7 +146,8 @@ function targetCompanyPanelHtml(model: DashboardViewModel): string {
 
   return (
     `<p style="font-size: 13px; font-weight: 500; margin: 0 0 12px;">목표 회사 마감일 현황</p>` +
-    `<div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; padding: 14px; display:flex; flex-direction:column; gap:16px;">${body}</div>`
+    `<div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; padding: 14px; display:flex; flex-direction:column; gap:16px;">${body}</div>` +
+    registerTargetCompanyFormHtml()
   );
 }
 
@@ -163,6 +204,31 @@ function quizInactivityBannerHtml(daysSinceLastQuiz: number | null): string {
   );
 }
 
+function startQuizFormHtml(model: DashboardViewModel): string {
+  if (model.targetCompanies.length === 0) {
+    return (
+      `<div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; padding: 14px; margin-top: 14px;">` +
+      `<p style="font-size: 13px; font-weight: 500; margin: 0 0 6px;">역량 진단 퀴즈 시작</p>` +
+      `<p style="font-size:12px; color:var(--text-secondary); margin:0;">퀴즈를 시작하려면 먼저 목표 회사를 등록해주세요.</p>` +
+      `</div>`
+    );
+  }
+
+  const options = model.targetCompanies
+    .map((company) => `<option value="${escapeHtml(company.id)}">${escapeHtml(company.name)}</option>`)
+    .join("");
+
+  return (
+    `<div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; padding: 14px; margin-top: 14px;">` +
+    `<p style="font-size: 13px; font-weight: 500; margin: 0 0 10px;">역량 진단 퀴즈 시작</p>` +
+    `<form method="post" action="/actions/start-quiz" style="display:flex; gap:8px; align-items:center;">` +
+    `<select name="companyId" style="font-size:13px; padding:6px; border:0.5px solid var(--border); border-radius:6px; font-family:inherit;">${options}</select>` +
+    `<button type="submit" style="font-size:13px; font-weight:500; color:var(--text-accent); background:var(--bg-accent); padding:7px 14px; border-radius:6px;">퀴즈 시작</button>` +
+    `</form>` +
+    `</div>`
+  );
+}
+
 function quizPanelHtml(model: DashboardViewModel): string {
   const body = model.quizCompetencyScores.length === 0
     ? `<p style="font-size:13px; color:var(--text-secondary); margin:0; padding:14px;">아직 진단 기록이 없어요.</p>`
@@ -171,7 +237,8 @@ function quizPanelHtml(model: DashboardViewModel): string {
   return (
     quizInactivityBannerHtml(model.daysSinceLastQuiz) +
     `<p style="font-size: 13px; font-weight: 500; margin: 0 0 10px;">항목별 점수 (5점 만점)</p>` +
-    `<div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; padding: 1rem;">${body}</div>`
+    `<div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; padding: 1rem;">${body}</div>` +
+    startQuizFormHtml(model)
   );
 }
 
@@ -192,13 +259,9 @@ function navButtonHtml(item: { panel: string; label: string }, index: number): s
   );
 }
 
-export function renderDashboardPage(model: DashboardViewModel): string {
-  return `<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<title>KPI_tracker 관리 화면</title>
-<style>
+/** Shared palette/chrome, reused by the transient action pages (quiz-taking, grading result) so
+ * they look like the same app instead of a bare unstyled form. */
+export const PAGE_STYLE = `
   :root {
     --surface-0: #fcfcfb;
     --surface-1: #f1efe8;
@@ -221,20 +284,36 @@ export function renderDashboardPage(model: DashboardViewModel): string {
   .wrap { max-width: 760px; margin: 0 auto; }
   button { font-family: inherit; border: none; background: transparent; cursor: pointer; }
   .kpi-item { cursor: pointer; }
-</style>
+`;
+
+/** The macOS-style title bar used at the top of every page (dashboard and the transient action
+ * pages alike). */
+export function macChromeHtml(title: string): string {
+  return (
+    `<div style="background: var(--surface-1); height: 40px; display: flex; align-items: center; padding: 0 14px; position: relative; border-bottom: 0.5px solid var(--border);">` +
+    `<div style="display: flex; gap: 8px;">` +
+    `<span style="width: 12px; height: 12px; border-radius: 50%; background: #FF5F57;"></span>` +
+    `<span style="width: 12px; height: 12px; border-radius: 50%; background: #FEBC2E;"></span>` +
+    `<span style="width: 12px; height: 12px; border-radius: 50%; background: #28C840;"></span>` +
+    `</div>` +
+    `<span style="position: absolute; left: 50%; transform: translateX(-50%); font-size: 13px; font-weight: 500;">${escapeHtml(title)}</span>` +
+    `</div>`
+  );
+}
+
+export function renderDashboardPage(model: DashboardViewModel): string {
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>KPI_tracker 관리 화면</title>
+<style>${PAGE_STYLE}</style>
 </head>
 <body>
 <div class="wrap">
 <div style="border: 0.5px solid var(--border); border-radius: 12px; overflow: hidden;">
 
-  <div style="background: var(--surface-1); height: 40px; display: flex; align-items: center; padding: 0 14px; position: relative; border-bottom: 0.5px solid var(--border);">
-    <div style="display: flex; gap: 8px;">
-      <span style="width: 12px; height: 12px; border-radius: 50%; background: #FF5F57;"></span>
-      <span style="width: 12px; height: 12px; border-radius: 50%; background: #FEBC2E;"></span>
-      <span style="width: 12px; height: 12px; border-radius: 50%; background: #28C840;"></span>
-    </div>
-    <span style="position: absolute; left: 50%; transform: translateX(-50%); font-size: 13px; font-weight: 500;">KPI_tracker</span>
-  </div>
+  ${macChromeHtml("KPI_tracker")}
 
   <div style="display: grid; grid-template-columns: 168px 1fr; min-height: 580px;">
     <div style="background: var(--surface-1); padding: 14px 10px; display: flex; flex-direction: column; gap: 2px; border-right: 0.5px solid var(--border);">

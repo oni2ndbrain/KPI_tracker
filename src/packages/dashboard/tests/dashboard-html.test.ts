@@ -26,6 +26,7 @@ const targetCompanies: TargetCompany[] = [
     gap: ["포토공정"],
     kpiId: "samsung-competency-fill",
     applicationPeriod: null,
+    appliedAt: null,
   },
 ];
 
@@ -105,6 +106,62 @@ describe("renderDashboardPage", () => {
     const html = renderDashboardPage(noQuizModel);
 
     expect(html).toContain("아직 역량 진단 퀴즈를 진행한 적이 없어요");
+  });
+
+  test("includes a 목표 회사 등록 form posting to the register action", () => {
+    const html = renderDashboardPage(model);
+
+    expect(html).toContain('action="/actions/register-target-company"');
+    expect(html).toContain('name="name"');
+    expect(html).toContain('name="jdText"');
+  });
+
+  test("shows a 지원 완료 check for a company not yet applied to, and a badge once it is", () => {
+    const html = renderDashboardPage(model);
+    expect(html).toContain('action="/actions/mark-applied"');
+    expect(html).toContain('value="samsung"');
+
+    const appliedModel = buildDashboardViewModel({
+      kpis,
+      targetCompanies: [{ ...targetCompanies[0]!, appliedAt: "2026-08-10T00:00:00.000Z" }],
+      quizAnswers,
+      lastQuizAt: "2026-08-08T00:00:00.000Z",
+      today: "2026-08-17",
+      generatedAt: "2026-08-17T00:00:00.000Z",
+    });
+    const appliedHtml = renderDashboardPage(appliedModel);
+    expect(appliedHtml).toContain("지원 완료");
+    expect(appliedHtml).not.toContain('action="/actions/mark-applied"');
+  });
+
+  test("includes a 역량 점수 조정 form targeting the company's competency-fill KPI id", () => {
+    const html = renderDashboardPage(model);
+
+    expect(html).toContain('action="/actions/adjust-competency-score"');
+    expect(html).toContain('value="samsung-competency-fill"');
+  });
+
+  test("includes a 퀴즈 시작 form listing registered target companies", () => {
+    const html = renderDashboardPage(model);
+
+    expect(html).toContain('action="/actions/start-quiz"');
+    expect(html).toContain('<option value="samsung">삼성전자 · 공정기술</option>');
+  });
+
+  test("prompts to register a target company first when none exist yet, instead of an empty quiz-start form", () => {
+    const noCompanyModel = buildDashboardViewModel({
+      kpis,
+      targetCompanies: [],
+      quizAnswers: [],
+      lastQuizAt: null,
+      today: "2026-08-17",
+      generatedAt: "2026-08-17T00:00:00.000Z",
+    });
+
+    const html = renderDashboardPage(noCompanyModel);
+
+    expect(html).not.toContain('action="/actions/start-quiz"');
+    expect(html).toContain("먼저 목표 회사를 등록해주세요");
   });
 
   test("matches the agreed golden layout", () => {
