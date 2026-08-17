@@ -1,5 +1,5 @@
-import type { Achievement, ReportFact, ReportProposal } from "../../kpi-engine/index.js";
-import { paletteFor } from "./palette.js";
+import type { Achievement, ReportFact, ReportProposal, WeakItemReport } from "../../kpi-engine/index.js";
+import { paletteFor, WEAK_RED } from "./palette.js";
 
 // Shared by regular-report-html.ts and achievement-report-html.ts so the two email layouts stay
 // visually identical wherever they render the same kind of data (fact rows, proposal boxes, …).
@@ -17,8 +17,10 @@ export function dateOnly(isoTimestamp: string): string {
   return isoTimestamp.slice(0, 10);
 }
 
+// Floored at 0 — a KPI corrected down by a wrong quiz answer can otherwise drive
+// achievementRate negative, which would render as a misleading negative percentage.
 export function pct(rate: number): string {
-  return `${Math.round(rate * 100)}%`;
+  return `${Math.max(0, Math.round(rate * 100))}%`;
 }
 
 function barWidth(rate: number): number {
@@ -74,6 +76,19 @@ export function banner(bg: string, text: string, message: string): string {
 export function renderAchievementItem(achievement: Achievement): string {
   return `<li style="margin-bottom:6px;font-size:13px;color:#0b0b0b;">` +
     `<span style="color:#898781;">${dateOnly(achievement.discoveredAt)}</span> — ${escapeHtml(achievement.title)}` +
+    `</li>`;
+}
+
+const RECOMMENDATION_SOURCE_LABEL: Record<WeakItemReport["recommendation"]["source"], string> = {
+  "llm-wiki": "LLM Wiki",
+  "web-search": "새로 찾은 자료",
+};
+
+export function renderWeakItem(item: WeakItemReport): string {
+  return `<li style="margin-bottom:8px;font-size:13px;color:#0b0b0b;">` +
+    `<span style="display:inline-block;background:${WEAK_RED.bg};color:${WEAK_RED.text};border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600;margin-right:6px;">${item.consecutiveWrongCount}회 연속 오답</span>` +
+    `<strong>${escapeHtml(item.competency)}</strong><br/>` +
+    `<span style="color:#52514e;">추천: ${escapeHtml(item.recommendation.title)} (${RECOMMENDATION_SOURCE_LABEL[item.recommendation.source]})</span>` +
     `</li>`;
 }
 

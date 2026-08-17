@@ -9,6 +9,7 @@ import {
   pct,
   renderAchievementItem,
   renderProposalBox,
+  renderWeakItem,
   section,
 } from "./html-helpers.js";
 
@@ -45,6 +46,10 @@ export function renderRegularReportEmail(data: RegularReportData, options: Rende
     `<ul style="margin:0;padding-left:18px;">${achievements.map(renderAchievementItem).join("")}</ul>`,
   );
 
+  const weakItemsBody = emptyOr(data.weakItems, "취약 항목이 없어요.", (weakItems) =>
+    `<ul style="margin:0;padding-left:18px;">${weakItems.map(renderWeakItem).join("")}</ul>`,
+  );
+
   return `<!DOCTYPE html>
 <html lang="ko">
 <body style="margin:0;padding:0;background:#f1efe8;font-family:-apple-system,'Segoe UI',sans-serif;">
@@ -56,6 +61,7 @@ export function renderRegularReportEmail(data: RegularReportData, options: Rende
 ${section("팩트", factsTable(data.facts))}
 ${section("갭", gapsBody)}
 ${section("제안", proposalsBody)}
+${section("취약 항목", weakItemsBody)}
 ${section("최근 성과", achievementsBody)}
 ${dashboardButtonRow(options.dashboardUrl)}
 </table>

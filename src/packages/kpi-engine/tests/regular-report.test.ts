@@ -159,4 +159,37 @@ describe("buildRegularReportData", () => {
     expect(report.period).toBe("weekly");
     expect(report.generatedAt).toBe("2026-08-01T00:00:00.000Z");
   });
+
+  test("weak items default to an empty list when none are given", () => {
+    const report = buildRegularReportData({
+      period: "weekly",
+      kpis: [],
+      achievements: [],
+      since: "2026-07-25T00:00:00.000Z",
+      generatedAt: "2026-08-01T00:00:00.000Z",
+    });
+
+    expect(report.weakItems).toEqual([]);
+  });
+
+  test("carries through the weak items it was given", () => {
+    const weakItems = [
+      {
+        competency: "통계적 공정관리(SPC)",
+        consecutiveWrongCount: 2,
+        recommendation: { source: "llm-wiki" as const, title: "SPC 관리도 노트", reference: "note-1" },
+      },
+    ];
+
+    const report = buildRegularReportData({
+      period: "weekly",
+      kpis: [],
+      achievements: [],
+      since: "2026-07-25T00:00:00.000Z",
+      generatedAt: "2026-08-01T00:00:00.000Z",
+      weakItems,
+    });
+
+    expect(report.weakItems).toEqual(weakItems);
+  });
 });

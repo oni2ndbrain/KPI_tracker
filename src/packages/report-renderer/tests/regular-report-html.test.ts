@@ -50,6 +50,13 @@ const weeklyData: RegularReportData = {
       discoveredAt: "2026-08-12T00:00:00.000Z",
     },
   ],
+  weakItems: [
+    {
+      competency: "통계적 공정관리(SPC)",
+      consecutiveWrongCount: 2,
+      recommendation: { source: "llm-wiki", title: "SPC 관리도 노트", reference: "note-1" },
+    },
+  ],
 };
 
 const monthlyData: RegularReportData = {
@@ -69,6 +76,15 @@ describe("renderRegularReportEmail", () => {
     const html = renderRegularReportEmail(weeklyData, { dashboardUrl: "https://dashboard.example/kpi" });
 
     expect(html).toContain("https://dashboard.example/kpi");
+  });
+
+  test("includes each weak item's competency, streak count, and study recommendation", () => {
+    const html = renderRegularReportEmail(weeklyData, { dashboardUrl: "https://dashboard.example/kpi" });
+
+    expect(html).toContain("통계적 공정관리(SPC)");
+    expect(html).toContain("2회 연속 오답");
+    expect(html).toContain("SPC 관리도 노트");
+    expect(html).toContain("LLM Wiki");
   });
 
   test("weekly report matches the agreed golden layout", () => {

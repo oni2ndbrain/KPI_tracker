@@ -85,3 +85,23 @@ export interface QuizAnswerRecord {
   isStructured: boolean;
   answeredAt: string;
 }
+
+/** A competency whose most recent quiz answers ended on a streak of 2+ wrong answers in a row —
+ * see weak-item.ts's computeWeakItems. */
+export interface WeakItem {
+  competency: string;
+  consecutiveWrongCount: number;
+}
+
+/** Where to study to close a weak item's gap — the LLM Wiki first if related material already
+ * exists there, a freshly found source otherwise. */
+export interface StudyRecommendation {
+  source: "llm-wiki" | "web-search";
+  title: string;
+  /** A wiki note reference when source is "llm-wiki"; a URL or search description when "web-search". */
+  reference: string;
+}
+
+export interface WeakItemReport extends WeakItem {
+  recommendation: StudyRecommendation;
+}

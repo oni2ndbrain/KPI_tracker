@@ -11,8 +11,12 @@ export type {
   ProgressEvent,
   QuizAnswerRecord,
   QuizQuestion,
+  StudyRecommendation,
   TargetCompany,
+  WeakItem,
+  WeakItemReport,
 } from "./lib/types.js";
+export { computeWeakItems, isWrongAnswer, outstandingWrongQuestions } from "./lib/weak-item.js";
 export type {
   BuildRegularReportInput,
   RegularReportData,

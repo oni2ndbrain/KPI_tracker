@@ -9,6 +9,7 @@ import {
   factsTable,
   renderAchievementItem,
   renderProposalBox,
+  renderWeakItem,
   section,
 } from "./html-helpers.js";
 
@@ -30,6 +31,10 @@ export function renderAchievementReportEmail(data: AchievementReportData, option
     ? renderProposalBox(data.laggingSuggestion)
     : `<p style="font-size:13px;color:#52514e;margin:0;">뒤처진 항목이 없어요. 모든 KPI가 목표를 달성했어요.</p>`;
 
+  const weakItemsBody = emptyOr(data.weakItems, "취약 항목이 없어요.", (weakItems) =>
+    `<ul style="margin:0;padding-left:18px;">${weakItems.map(renderWeakItem).join("")}</ul>`,
+  );
+
   return `<!DOCTYPE html>
 <html lang="ko">
 <body style="margin:0;padding:0;background:#f1efe8;font-family:-apple-system,'Segoe UI',sans-serif;">
@@ -41,6 +46,7 @@ export function renderAchievementReportEmail(data: AchievementReportData, option
 ${achievementBanner(data)}
 ${section("무엇을 했는지", whatWasDoneBody)}
 ${section("전체 역량 현황", factsTable(data.overallProgress))}
+${section("취약 항목", weakItemsBody)}
 ${section("가장 뒤처진 항목", laggingSuggestionBody)}
 ${dashboardButtonRow(options.dashboardUrl)}
 </table>

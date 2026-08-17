@@ -1,6 +1,6 @@
 import { proposalMessageFor, remainingToTarget, toReportFact } from "./report-fact.js";
 import type { ReportFact, ReportProposal } from "./report-fact.js";
-import type { Achievement, KpiState } from "./types.js";
+import type { Achievement, KpiState, WeakItemReport } from "./types.js";
 
 export interface AchievementReportData {
   generatedAt: string;
@@ -10,6 +10,7 @@ export interface AchievementReportData {
   /** A concrete suggestion for the single most-lagging KPI other than the one just achieved, or
    * null when every other KPI is also at target. */
   laggingSuggestion: ReportProposal | null;
+  weakItems: WeakItemReport[];
 }
 
 export interface BuildAchievementReportInput {
@@ -19,11 +20,15 @@ export interface BuildAchievementReportInput {
   /** ISO timestamp; achievements discovered on or after this count as "what was done". */
   since: string;
   generatedAt?: string;
+  /** 역량 진단 퀴즈 weak items to highlight, each with a study recommendation. Defaults to none —
+   * callers that don't track quiz weak items can omit this entirely. */
+  weakItems?: WeakItemReport[];
 }
 
 export function buildAchievementReportData(input: BuildAchievementReportInput): AchievementReportData {
   const { achievedKpi, allKpis, achievements, since } = input;
   const generatedAt = input.generatedAt ?? new Date().toISOString();
+  const weakItems = input.weakItems ?? [];
 
   const whatWasDone = achievements
     .filter((achievement) => achievement.discoveredAt >= since)
@@ -49,5 +54,6 @@ export function buildAchievementReportData(input: BuildAchievementReportInput): 
     whatWasDone,
     overallProgress,
     laggingSuggestion,
+    weakItems,
   };
 }

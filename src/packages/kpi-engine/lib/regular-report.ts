@@ -1,6 +1,6 @@
 import { remainingToTarget, toReportFact, proposalMessageFor } from "./report-fact.js";
 import type { ReportFact, ReportProposal } from "./report-fact.js";
-import type { Achievement, KpiCategory, KpiState } from "./types.js";
+import type { Achievement, KpiCategory, KpiState, WeakItemReport } from "./types.js";
 
 export type { ReportFact, ReportProposal } from "./report-fact.js";
 
@@ -26,6 +26,7 @@ export interface RegularReportData {
   gaps: ReportGap[];
   proposals: ReportProposal[];
   recentAchievements: Achievement[];
+  weakItems: WeakItemReport[];
 }
 
 export interface BuildRegularReportInput {
@@ -35,11 +36,15 @@ export interface BuildRegularReportInput {
   /** ISO timestamp; achievements discovered on or after this count as "recent". */
   since: string;
   generatedAt?: string;
+  /** 역량 진단 퀴즈 weak items to highlight, each with a study recommendation. Defaults to none —
+   * callers that don't track quiz weak items can omit this entirely. */
+  weakItems?: WeakItemReport[];
 }
 
 export function buildRegularReportData(input: BuildRegularReportInput): RegularReportData {
   const { period, kpis, achievements, since } = input;
   const generatedAt = input.generatedAt ?? new Date().toISOString();
+  const weakItems = input.weakItems ?? [];
 
   const facts: ReportFact[] = kpis.map(toReportFact);
 
@@ -66,5 +71,5 @@ export function buildRegularReportData(input: BuildRegularReportInput): RegularR
     .filter((achievement) => achievement.discoveredAt >= since)
     .sort((a, b) => (a.discoveredAt < b.discoveredAt ? 1 : a.discoveredAt > b.discoveredAt ? -1 : 0));
 
-  return { period, generatedAt, facts, gaps, proposals, recentAchievements };
+  return { period, generatedAt, facts, gaps, proposals, recentAchievements, weakItems };
 }

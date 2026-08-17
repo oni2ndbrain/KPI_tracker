@@ -46,6 +46,13 @@ const dataWithLagging: AchievementReportData = {
     kpiName: "삼성전자 공정기술 역량 채우기",
     message: "삼성전자 공정기술 역량 채우기: 목표까지 역량 3개가 더 필요해요.",
   },
+  weakItems: [
+    {
+      competency: "통계적 공정관리(SPC)",
+      consecutiveWrongCount: 2,
+      recommendation: { source: "web-search", title: "SPC 관리도 개론", reference: "https://example.com/spc" },
+    },
+  ],
 };
 
 const dataWithoutLagging: AchievementReportData = {
@@ -71,6 +78,15 @@ describe("renderAchievementReportEmail", () => {
     const html = renderAchievementReportEmail(dataWithLagging, { dashboardUrl: "https://dashboard.example/kpi" });
 
     expect(html).toContain("이번 달 지원 건수");
+  });
+
+  test("includes each weak item's competency, streak count, and study recommendation", () => {
+    const html = renderAchievementReportEmail(dataWithLagging, { dashboardUrl: "https://dashboard.example/kpi" });
+
+    expect(html).toContain("통계적 공정관리(SPC)");
+    expect(html).toContain("2회 연속 오답");
+    expect(html).toContain("SPC 관리도 개론");
+    expect(html).toContain("새로 찾은 자료");
   });
 
   test("with a lagging suggestion matches the agreed golden layout", () => {

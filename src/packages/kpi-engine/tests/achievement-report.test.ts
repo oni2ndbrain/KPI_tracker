@@ -117,4 +117,40 @@ describe("buildAchievementReportData", () => {
 
     expect(report.generatedAt).toBe("2026-08-14T00:00:00.000Z");
   });
+
+  test("weak items default to an empty list when none are given", () => {
+    const achieved = kpiAt("apply-count", "지원 건수", 10, 10);
+
+    const report = buildAchievementReportData({
+      achievedKpi: achieved,
+      allKpis: [achieved],
+      achievements: [],
+      since: "2026-08-01T00:00:00.000Z",
+      generatedAt: "2026-08-14T00:00:00.000Z",
+    });
+
+    expect(report.weakItems).toEqual([]);
+  });
+
+  test("carries through the weak items it was given", () => {
+    const achieved = kpiAt("apply-count", "지원 건수", 10, 10);
+    const weakItems = [
+      {
+        competency: "통계적 공정관리(SPC)",
+        consecutiveWrongCount: 3,
+        recommendation: { source: "web-search" as const, title: "SPC 관리도 개론", reference: "https://example.com/spc" },
+      },
+    ];
+
+    const report = buildAchievementReportData({
+      achievedKpi: achieved,
+      allKpis: [achieved],
+      achievements: [],
+      since: "2026-08-01T00:00:00.000Z",
+      generatedAt: "2026-08-14T00:00:00.000Z",
+      weakItems,
+    });
+
+    expect(report.weakItems).toEqual(weakItems);
+  });
 });
