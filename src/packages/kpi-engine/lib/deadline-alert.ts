@@ -1,4 +1,4 @@
-import { daysBetween } from "./date-math.js";
+import { daysUntil } from "./date-math.js";
 import { proposalMessageFor, remainingToTarget } from "./report-fact.js";
 import type { KpiState } from "./types.js";
 
@@ -30,14 +30,10 @@ export interface DeadlineAlertData {
   generatedAt: string;
 }
 
-function daysUntilDeadline(today: string, deadline: string): number {
-  return Math.round(daysBetween(today, deadline));
-}
-
 /** True only on a D-14/D-7/D-1 checkpoint day while the KPI is still behind target — false on
  * every other day, and false once the KPI has caught up, even on a checkpoint day. */
 export function shouldSendDeadlineAlert(input: DeadlineAlertInput): boolean {
-  const days = daysUntilDeadline(input.today, input.deadline);
+  const days = daysUntil(input.today, input.deadline);
   return (DEADLINE_CHECKPOINTS as readonly number[]).includes(days) && input.kpi.achievementRate < 1;
 }
 
@@ -52,7 +48,7 @@ function actionMessageFor(input: DeadlineAlertInput): string {
 }
 
 export function buildDeadlineAlertData(input: DeadlineAlertInput): DeadlineAlertData {
-  const days = daysUntilDeadline(input.today, input.deadline) as DeadlineCheckpoint;
+  const days = daysUntil(input.today, input.deadline) as DeadlineCheckpoint;
 
   return {
     targetCompanyName: input.targetCompanyName,

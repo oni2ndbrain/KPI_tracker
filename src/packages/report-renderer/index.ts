@@ -6,3 +6,6 @@ export type { RenderDeadlineAlertOptions } from "./lib/deadline-alert-html.js";
 export { deadlineAlertSubject, renderDeadlineAlertEmail } from "./lib/deadline-alert-html.js";
 export type { RenderQuizInactivityAlertOptions } from "./lib/quiz-inactivity-alert-html.js";
 export { quizInactivityAlertSubject, renderQuizInactivityAlertEmail } from "./lib/quiz-inactivity-alert-html.js";
+export type { CategoryPalette } from "./lib/palette.js";
+export { paletteFor, WEAK_RED } from "./lib/palette.js";
+export { escapeHtml, pct } from "./lib/html-helpers.js";

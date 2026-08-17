@@ -33,6 +33,7 @@ export type { DeadlineAlertData, DeadlineAlertInput, DeadlineCheckpoint } from "
 export { buildDeadlineAlertData, shouldSendDeadlineAlert } from "./lib/deadline-alert.js";
 export type { QuizInactivityAlertData, QuizInactivityInput } from "./lib/quiz-inactivity-alert.js";
 export { buildQuizInactivityAlertData, shouldSendQuizInactivityAlert } from "./lib/quiz-inactivity-alert.js";
+export { daysBetween, daysUntil } from "./lib/date-math.js";
 
 export function createKpi(definition: KpiDefinition): KpiState {
   return {

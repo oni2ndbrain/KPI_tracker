@@ -13,7 +13,8 @@
     "send-achievement-report": "tsx --env-file=.env scripts/send-achievement-report.ts",
     "send-deadline-alerts": "tsx --env-file=.env scripts/send-deadline-alerts.ts",
     "send-quiz-inactivity-alert": "tsx --env-file=.env scripts/send-quiz-inactivity-alert.ts",
-    "sync-calendar-application-periods": "tsx --env-file=.env scripts/sync-calendar-application-periods.ts"
+    "sync-calendar-application-periods": "tsx --env-file=.env scripts/sync-calendar-application-periods.ts",
+    "serve-dashboard": "tsx --env-file=.env scripts/serve-dashboard.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

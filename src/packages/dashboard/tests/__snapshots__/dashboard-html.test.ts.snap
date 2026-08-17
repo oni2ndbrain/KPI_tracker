@@ -1,0 +1,92 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`renderDashboardPage > matches the agreed golden layout 1`] = `
+"<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>KPI_tracker 관리 화면</title>
+<style>
+  :root {
+    --surface-0: #fcfcfb;
+    --surface-1: #f1efe8;
+    --surface-2: #ffffff;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #898781;
+    --border: rgba(11,11,11,0.10);
+    --border-strong: rgba(11,11,11,0.18);
+    --bg-accent: #e6f1fb;
+    --text-accent: #185fa5;
+    --bg-warning: #faeeda;
+    --text-warning: #854f0b;
+    --text-success: #3b6d11;
+    --text-danger: #a32d2d;
+    --radius: 8px;
+    font-family: -apple-system, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  }
+  body { background: var(--surface-0); color: var(--text-primary); margin: 0; padding: 2rem; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  button { font-family: inherit; border: none; background: transparent; cursor: pointer; }
+  .kpi-item { cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<div style="border: 0.5px solid var(--border); border-radius: 12px; overflow: hidden;">
+
+  <div style="background: var(--surface-1); height: 40px; display: flex; align-items: center; padding: 0 14px; position: relative; border-bottom: 0.5px solid var(--border);">
+    <div style="display: flex; gap: 8px;">
+      <span style="width: 12px; height: 12px; border-radius: 50%; background: #FF5F57;"></span>
+      <span style="width: 12px; height: 12px; border-radius: 50%; background: #FEBC2E;"></span>
+      <span style="width: 12px; height: 12px; border-radius: 50%; background: #28C840;"></span>
+    </div>
+    <span style="position: absolute; left: 50%; transform: translateX(-50%); font-size: 13px; font-weight: 500;">KPI_tracker</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 168px 1fr; min-height: 580px;">
+    <div style="background: var(--surface-1); padding: 14px 10px; display: flex; flex-direction: column; gap: 2px; border-right: 0.5px solid var(--border);">
+      <p style="font-size: 11px; font-weight: 500; color: var(--text-muted); padding: 0 8px; margin: 4px 0 6px; letter-spacing: 0.02em;">탐색</p>
+      <button class="navbtn" data-panel="d-dash" style="display:flex; align-items:center; gap:9px; text-align:left; padding:7px 8px; font-size:13px; border-radius:6px; background: var(--bg-accent); color: var(--text-accent);">대시보드</button>
+      <button class="navbtn" data-panel="d-table" style="display:flex; align-items:center; gap:9px; text-align:left; padding:7px 8px; font-size:13px; border-radius:6px; background: transparent; color: var(--text-primary);">KPI 현황</button>
+      <button class="navbtn" data-panel="d-company" style="display:flex; align-items:center; gap:9px; text-align:left; padding:7px 8px; font-size:13px; border-radius:6px; background: transparent; color: var(--text-primary);">목표 회사</button>
+      <button class="navbtn" data-panel="d-quiz" style="display:flex; align-items:center; gap:9px; text-align:left; padding:7px 8px; font-size:13px; border-radius:6px; background: transparent; color: var(--text-primary);">역량 진단</button>
+      <button class="navbtn" data-panel="d-def" style="display:flex; align-items:center; gap:9px; text-align:left; padding:7px 8px; font-size:13px; border-radius:6px; background: transparent; color: var(--text-primary);">지표 정의서</button>
+      <p style="font-size: 11px; color: var(--text-muted); padding: 12px 8px 0; margin: 10px 0 0; border-top: 0.5px solid var(--border); line-height: 1.6;">정기·달성 리포트와 D-day 알림은 이메일로 별도 발송돼요.</p>
+    </div>
+
+    <div style="background: var(--surface-2); padding: 1.25rem;">
+      <div id="d-dash" class="dpanel"><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 14px;"><button class="kpi-item" data-category="competency-fill" style="text-align:left; background: #9FE1CB; border-radius: 10px; padding: 12px; display:block; width:100%;"><p style="font-size:11px; color:#0F6E56; margin:0 0 4px;">역량 채우기</p><p style="font-size:20px; font-weight:500; color:#085041; margin:0;">62%</p></button><button class="kpi-item" data-category="activity-count" style="text-align:left; background: #F5C4B3; border-radius: 10px; padding: 12px; display:block; width:100%;"><p style="font-size:11px; color:#993C1D; margin:0 0 4px;">활동 건수</p><p style="font-size:20px; font-weight:500; color:#712B13; margin:0;">3건</p></button><button class="kpi-item" data-category="project-completion" style="text-align:left; background: #FAC775; border-radius: 10px; padding: 12px; display:block; width:100%;"><p style="font-size:11px; color:#854F0B; margin:0 0 4px;">프로젝트 완성도</p><p style="font-size:20px; font-weight:500; color:#633806; margin:0;">데이터 없음</p></button><button class="kpi-item" data-category="quiz-score" style="text-align:left; background: #CECBF6; border-radius: 10px; padding: 12px; display:block; width:100%;"><p style="font-size:11px; color:#534AB7; margin:0 0 4px;">퀴즈 평균</p><p style="font-size:20px; font-weight:500; color:#3C3489; margin:0;">데이터 없음</p></button></div><div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; padding: 1rem;"><p style="font-size: 12px; color: var(--text-secondary); margin: 0 0 10px;">역량 갭 (JD 요구 vs 보유)</p><div style="margin-bottom:10px;"><div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>포토공정</span><span style="color:var(--text-secondary);">0 / 100</span></div><div style="background:var(--surface-1); border-radius:6px; height:8px; overflow:hidden;"><div style="width:0%; height:100%; background:#5DCAA5;"></div></div></div><div style="margin-bottom:10px;"><div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>식각공정</span><span style="color:var(--text-secondary);">80 / 100</span></div><div style="background:var(--surface-1); border-radius:6px; height:8px; overflow:hidden;"><div style="width:80%; height:100%; background:#5DCAA5;"></div></div></div></div></div>
+      <div id="d-table" class="dpanel" style="display:none;"><p style="font-size: 13px; font-weight: 500; margin: 0 0 12px;">KPI 항목별 현황</p><div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; overflow: hidden;"><button class="kpi-item" data-category="competency-fill" style="display:flex; width:100%; justify-content:space-between; align-items:center; padding:11px 14px; border-bottom:0.5px solid var(--border); text-align:left;"><span style="font-size:13px;">삼성전자 공정기술 역량 채우기</span><span style="font-size:13px; font-weight:500; color:var(--text-danger);">62% · 목표 100%</span></button><button class="kpi-item" data-category="activity-count" style="display:flex; width:100%; justify-content:space-between; align-items:center; padding:11px 14px; border-bottom:0.5px solid var(--border); text-align:left;"><span style="font-size:13px;">이번 달 지원 건수</span><span style="font-size:13px; font-weight:500; color:var(--text-danger);">3건 · 목표 5건</span></button></div></div>
+      <div id="d-company" class="dpanel" style="display:none;"><p style="font-size: 13px; font-weight: 500; margin: 0 0 12px;">목표 회사 마감일 현황</p><div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; padding: 14px; display:flex; flex-direction:column; gap:16px;"><div><div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;"><span>삼성전자 · 공정기술</span><span style="color:var(--text-danger); font-weight:500;">D-18</span></div><div style="background:var(--surface-1); border-radius:6px; height:8px; overflow:hidden;"><div style="width:62%; height:100%; background:#5DCAA5;"></div></div><p style="font-size:11px; color:var(--text-muted); margin:6px 0 0;">부족 역량: 포토공정</p></div></div></div>
+      <div id="d-quiz" class="dpanel" style="display:none;"><div style="background: var(--bg-warning); border-radius: 8px; padding: 9px 12px; display:flex; align-items:center; gap:8px; margin-bottom:14px;"><span style="font-size:12px; color:var(--text-warning);">마지막 진단 9일 전 · 이번 주 진단해볼까요?</span></div><p style="font-size: 13px; font-weight: 500; margin: 0 0 10px;">항목별 점수 (5점 만점)</p><div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; padding: 1rem;"><div style="margin-bottom:10px;"><div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>식각공정</span><span style="color:var(--text-secondary);">4.0/5</span></div><div style="background:var(--surface-1); border-radius:6px; height:8px; overflow:hidden;"><div style="width:80%; height:100%; background:#5DCAA5;"></div></div></div></div></div>
+      <div id="d-def" class="dpanel" style="display:none;"><div id="def-competency-fill" class="defblock" style="display:block;"><p style="font-size: 13px; font-weight: 500; margin: 0 0 12px;">지표 정의서 · 역량 채우기</p><div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; overflow: hidden;"><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">지표 구분</span><span style="font-size:13px;">역량 채우기 KPI</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">산식</span><span style="font-size:13px;">(충족한 JD 요구 역량 수 ÷ 전체 요구 역량 수) × 100, 진단 퀴즈 점수로 가중 보정</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">데이터 원천</span><span style="font-size:13px;">채용공고 텍스트, LLM Wiki 노트/대화, 역량 진단 퀴즈</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">집계 주기</span><span style="font-size:13px;">매주</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">관련 KPI</span><span style="font-size:13px;">목표 회사 등록마다 하나씩 생성되며, 퀴즈 점수 향상 KPI로 보정돼요.</span></div></div></div><div id="def-activity-count" class="defblock" style="display:none;"><p style="font-size: 13px; font-weight: 500; margin: 0 0 12px;">지표 정의서 · 활동 건수</p><div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; overflow: hidden;"><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">지표 구분</span><span style="font-size:13px;">활동 건수 KPI</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">산식</span><span style="font-size:13px;">기간 내 기록된 활동 이벤트 수의 누적 합</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">데이터 원천</span><span style="font-size:13px;">지원 완료 체크 등 사용자가 기록한 활동 이벤트</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">집계 주기</span><span style="font-size:13px;">매월</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">관련 KPI</span><span style="font-size:13px;">다른 KPI 카테고리와 독립적으로 추적돼요.</span></div></div></div><div id="def-project-completion" class="defblock" style="display:none;"><p style="font-size: 13px; font-weight: 500; margin: 0 0 12px;">지표 정의서 · 프로젝트 완성 현황</p><div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; overflow: hidden;"><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">지표 구분</span><span style="font-size:13px;">프로젝트 완성 현황 KPI</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">산식</span><span style="font-size:13px;">가장 최근에 기록한 진행률(%)을 그대로 현재값으로 사용</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">데이터 원천</span><span style="font-size:13px;">사용자가 직접 기록한 진행률</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">집계 주기</span><span style="font-size:13px;">기록할 때마다</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">관련 KPI</span><span style="font-size:13px;">다른 KPI 카테고리와 독립적으로 추적돼요.</span></div></div></div><div id="def-quiz-score" class="defblock" style="display:none;"><p style="font-size: 13px; font-weight: 500; margin: 0 0 12px;">지표 정의서 · 퀴즈 점수 향상</p><div style="background: var(--surface-0); border: 0.5px solid var(--border); border-radius: 10px; overflow: hidden;"><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">지표 구분</span><span style="font-size:13px;">퀴즈 점수 향상 KPI</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">산식</span><span style="font-size:13px;">역량 진단 퀴즈 답변 점수(1~5)의 평균</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">데이터 원천</span><span style="font-size:13px;">역량 진단 퀴즈 채점 결과</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">집계 주기</span><span style="font-size:13px;">퀴즈를 완료할 때마다</span></div><div style="display:flex; padding:11px 14px; border-bottom:0.5px solid var(--border);"><span style="width:100px; font-size:12px; color:var(--text-muted); flex-shrink:0;">관련 KPI</span><span style="font-size:13px;">역량 채우기 KPI의 점수를 보정하는 데 쓰여요.</span></div></div></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+document.querySelectorAll('.navbtn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.dpanel').forEach(function(p){ p.style.display = 'none'; });
+    document.getElementById(btn.dataset.panel).style.display = 'block';
+    document.querySelectorAll('.navbtn').forEach(function(b){ b.style.background = 'transparent'; b.style.color = 'var(--text-primary)'; });
+    btn.style.background = 'var(--bg-accent)'; btn.style.color = 'var(--text-accent)';
+  });
+});
+document.querySelectorAll('.kpi-item').forEach(function(item){
+  item.addEventListener('click', function(){
+    document.querySelectorAll('.dpanel').forEach(function(p){ p.style.display = 'none'; });
+    document.getElementById('d-def').style.display = 'block';
+    document.querySelectorAll('.defblock').forEach(function(b){ b.style.display = 'none'; });
+    document.getElementById('def-' + item.dataset.category).style.display = 'block';
+    document.querySelectorAll('.navbtn').forEach(function(b){ b.style.background = 'transparent'; b.style.color = 'var(--text-primary)'; });
+    var defNavBtn = document.querySelector('.navbtn[data-panel="d-def"]');
+    if (defNavBtn) { defNavBtn.style.background = 'var(--bg-accent)'; defNavBtn.style.color = 'var(--text-accent)'; }
+  });
+});
+</script>
+</body>
+</html>"
+`;
