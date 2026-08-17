@@ -10,7 +10,7 @@ import {
   renderQuizAnswerResultPage,
   renderQuizQuestionsPage,
 } from "../src/packages/dashboard/index.js";
-import { createEmptyWikiReader } from "../src/packages/evidence-source/index.js";
+import { createEmptyWikiReader, createFsWikiReader } from "../src/packages/evidence-source/index.js";
 import { createDriveAuthFromEnv, createGoogleApiDriveClient } from "../src/packages/kpi-storage/google-drive.js";
 import {
   createKpiStorage,
@@ -50,10 +50,13 @@ function getCalendarClient(): CalendarClient {
   return calendarClient;
 }
 
-// Placeholder until the real LLM Wiki folder reader (evidence-source's createFsWikiReader) is
-// wired up with real folder paths — same "placeholder until real LLM wiring" reasoning as the
-// heuristic clients below (see their doc comments).
-const wikiReader = createEmptyWikiReader();
+// LLM_WIKI_NOTES_FOLDER points at the real LLM Wiki notes folder (e.g. Obsidian's "wiki" folder
+// synced via Google Drive for Desktop). Falls back to the empty reader when unset, so the
+// dashboard still runs on a machine without that folder mounted. Conversation transcripts aren't
+// wired in yet — no exported-conversations folder exists yet (see WikiFolders' optional field).
+const wikiReader = process.env.LLM_WIKI_NOTES_FOLDER
+  ? createFsWikiReader({ notesFolder: process.env.LLM_WIKI_NOTES_FOLDER })
+  : createEmptyWikiReader();
 
 const quizSession = createQuizSession({
   questionClient: createHeuristicQuizQuestionGenerationClient(),

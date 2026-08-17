@@ -57,4 +57,13 @@ describe("createFsWikiReader", () => {
 
     expect(items.map((item) => item.sourceId)).toEqual(["note.md"]);
   });
+
+  test("reads notes alone when no conversations folder is given yet", async () => {
+    const { notesFolder } = await wikiFolders();
+    await writeFile(join(notesFolder, "note.md"), "노트만 있는 경우");
+
+    const items = await createFsWikiReader({ notesFolder }).list();
+
+    expect(items).toEqual([expect.objectContaining({ sourceId: "note.md", sourceType: "wiki-note" })]);
+  });
 });
