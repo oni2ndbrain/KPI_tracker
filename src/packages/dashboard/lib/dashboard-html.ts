@@ -102,10 +102,10 @@ function appliedControlHtml(row: TargetCompanyRow): string {
 
 function adjustCompetencyScoreFormHtml(row: TargetCompanyRow): string {
   return (
-    `<form method="post" action="/actions/adjust-competency-score" style="display:flex; gap:6px; align-items:center; margin:0;">` +
+    `<form method="post" action="/actions/adjust-competency-score" style="display:flex; gap:6px; align-items:center; margin:0;" title="현재 역량 채우기 점수에 더할 값이에요 (음수를 넣으면 줄어들어요).">` +
     `<input type="hidden" name="kpiId" value="${escapeHtml(row.kpiId)}">` +
-    `<label style="font-size:11px; color:var(--text-muted);">역량 점수 조정</label>` +
-    `<input type="number" name="amount" value="1" step="1" style="width:48px; font-size:12px; padding:2px 4px; border:0.5px solid var(--border); border-radius:4px;">` +
+    `<label style="font-size:11px; color:var(--text-muted);">역량 점수 증감</label>` +
+    `<input type="number" name="amount" value="1" step="1" aria-label="현재 점수에 더할 값 (음수 가능)" style="width:48px; font-size:12px; padding:2px 4px; border:0.5px solid var(--border); border-radius:4px;">` +
     `<button type="submit" style="font-size:11px; color:var(--text-accent); text-decoration:underline;">적용</button>` +
     `</form>`
   );

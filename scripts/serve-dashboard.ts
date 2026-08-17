@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { createServer } from "node:http";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { createCalendarAuthFromEnv, createGoogleApiCalendarClient } from "../src/packages/calendar/google-calendar.js";
+import type { CalendarClient } from "../src/packages/calendar/index.js";
 import {
   buildDashboardViewModel,
   renderActionErrorPage,
@@ -9,7 +10,7 @@ import {
   renderQuizAnswerResultPage,
   renderQuizQuestionsPage,
 } from "../src/packages/dashboard/index.js";
-import type { EvidenceItemReader } from "../src/packages/evidence-source/index.js";
+import { createEmptyWikiReader } from "../src/packages/evidence-source/index.js";
 import { createDriveAuthFromEnv, createGoogleApiDriveClient } from "../src/packages/kpi-storage/google-drive.js";
 import {
   createKpiStorage,
@@ -38,16 +39,21 @@ const kpiStorage = createKpiStorage(drive);
 const targetCompanyStorage = createTargetCompanyStorage(drive);
 const quizResultStorage = createQuizResultStorage(drive);
 const quizActivityStorage = createQuizActivityStorage(drive);
-const calendarClient = createGoogleApiCalendarClient(createCalendarAuthFromEnv());
+
+// Built lazily, only when a registration actually needs it — Google Calendar credentials are a
+// separate, optional setup step (scripts/setup-google-calendar-credentials.sh) from the Drive
+// credentials the read-only dashboard already depends on; viewing the dashboard shouldn't require
+// them too.
+let calendarClient: CalendarClient | undefined;
+function getCalendarClient(): CalendarClient {
+  calendarClient ??= createGoogleApiCalendarClient(createCalendarAuthFromEnv());
+  return calendarClient;
+}
 
 // Placeholder until the real LLM Wiki folder reader (evidence-source's createFsWikiReader) is
 // wired up with real folder paths — same "placeholder until real LLM wiring" reasoning as the
 // heuristic clients below (see their doc comments).
-const wikiReader: EvidenceItemReader = {
-  async list() {
-    return [];
-  },
-};
+const wikiReader = createEmptyWikiReader();
 
 const quizSession = createQuizSession({
   questionClient: createHeuristicQuizQuestionGenerationClient(),
@@ -111,7 +117,7 @@ async function handleRegisterTargetCompany(form: URLSearchParams): Promise<void>
     wikiSearch: createNoCoverageWikiSearch(),
     kpiStorage,
     targetCompanyStorage,
-    calendarClient,
+    calendarClient: getCalendarClient(),
   });
   await tracker.register({ id: randomUUID(), name, jdText });
 }

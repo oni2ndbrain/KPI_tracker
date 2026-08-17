@@ -8,6 +8,7 @@ export {
 export { createFsDocumentFolderReader } from "./lib/fs-document-folder-reader.js";
 export { createFsWikiReader } from "./lib/fs-wiki-reader.js";
 export type { WikiFolders } from "./lib/fs-wiki-reader.js";
+export { createEmptyWikiReader } from "./lib/empty-wiki-reader.js";
 export { createEvidenceSourceScanner } from "./lib/evidence-source-scanner.js";
 export type {
   EvidenceSourceScanner,

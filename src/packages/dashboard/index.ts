@@ -18,7 +18,7 @@ export { buildQuizCompetencyScores } from "./lib/quiz-scores.js";
 export { allDefinitions } from "./lib/definitions.js";
 export type { BuildDashboardViewModelInput } from "./lib/view-model.js";
 export { buildDashboardViewModel } from "./lib/view-model.js";
-export { renderDashboardPage, PAGE_STYLE, macChromeHtml } from "./lib/dashboard-html.js";
+export { renderDashboardPage } from "./lib/dashboard-html.js";
 export type { QuizAnswerResultPageInput, QuizQuestionsPageInput } from "./lib/quiz-session-html.js";
 export {
   renderActionErrorPage,
